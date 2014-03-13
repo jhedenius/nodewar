@@ -1,0 +1,128 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<style>
+.dot {
+	position:absolute;
+	width:30px;
+	height:30px;
+	background-color:gray;
+	border-radius:15px;
+	text-align:center;
+	font:bold small monaco;
+	color:white;
+	line-height:28px;
+	z-index: 2
+}
+textarea {
+	width:100%; height:20%;
+}
+canvas {
+	position:absolute;
+	top:0; left:0;
+	z-index: 1
+}
+</style>
+<div style="position:relative;" id="regions">
+</div>
+<textarea style="font-family:monaco;" id="output"></textarea>
+<button id="load">load</button>
+<script>
+$(function() {
+	$("#output").val(JSON.stringify(map));
+});
+var map = {
+	src: "uk.jpg",
+	regions: []
+};
+var selected = null;
+var divs = [];
+$("#load").click(function() {
+	map = JSON.parse($("#output").val());
+	selected = null;
+	divs = [];
+
+	var el = $("#regions")
+	el.empty();
+	map.regions.forEach(function(r, i) {
+		r.id = i;
+		var div = createRegionDiv(r);
+		divs.push(div);
+		$("#regions").append(div);
+	});
+	var img = document.createElement("img");
+	el.append(img);
+	$(img).load(function() {
+		el.append($('<canvas width="' + $(img).width() + '" height="' + $(img).height() + '"></canvas>'));
+		$("canvas").click(function(e) {
+			if (selected) return;
+			var region = {id:map.regions.length, x: e.offsetX, y:e.offsetY, neighbours: []}
+			map.regions.push(region);
+
+			var div = createRegionDiv(region);
+			divs.push(div);
+			$("#regions").append(div);
+			$("#output").val(JSON.stringify(map));
+		});
+		drawNeighbourConnections();
+	});
+	img.src = map.src;
+
+	$("#output").val(JSON.stringify(map));
+})
+
+function createRegionDiv(region) {
+	var div = document.createElement("div");
+	div.className="dot";
+	div.style.top=region.y-15;
+	div.style.left=region.x-15;
+	div.innerText=region.neighbours.length;
+	$(div).click(createRegionClickHandler(div, region));
+	return div;
+}
+function createRegionClickHandler(div, region) {
+	return function() {
+		if (selected == null) {
+			selected = region;
+			div.style.backgroundColor="red";
+			selected.neighbours.forEach(function(n) {divs[n].style.backgroundColor="blue"});
+		} else {
+			if (selected.id != region.id) {
+				if (selected.neighbours.indexOf(region.id) == -1) {
+					selected.neighbours.push(region.id);
+					region.neighbours.push(selected.id);
+					div.style.backgroundColor="blue"
+					divs[selected.id].innerText=selected.neighbours.length;
+					divs[region.id].innerText=region.neighbours.length;
+				} else {
+					selected.neighbours = selected.neighbours.filter(function(x) {return x != region.id;});
+					region.neighbours = region.neighbours.filter(function(x) {return x != selected.id;});
+					div.style.backgroundColor="gray"
+					divs[selected.id].innerText=selected.neighbours.length;
+					divs[region.id].innerText=region.neighbours.length;
+				}
+				drawNeighbourConnections();
+			} else {
+				divs[selected.id].style.backgroundColor = "gray";
+				selected.neighbours.forEach(function(n) {divs[n].style.backgroundColor="gray"});
+				selected = null;
+			}
+		}
+		$("#output").val(JSON.stringify(map));
+	}
+}
+function drawNeighbourConnections() {
+	var canvas = $("canvas").get(0);
+	var ctx = canvas.getContext("2d");
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.beginPath();
+	map.regions.forEach(function(r) {
+		r.neighbours.forEach(function(nId) {
+			var n = map.regions[nId];
+			if (r.id < n.id) {
+				ctx.moveTo(r.x,r.y);
+				ctx.lineTo(n.x,n.y);
+			}
+		}); 
+	});
+	ctx.stroke();	
+}
+</script>
