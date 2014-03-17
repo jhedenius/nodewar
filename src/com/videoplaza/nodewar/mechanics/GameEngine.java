@@ -132,14 +132,12 @@ public class GameEngine {
          return true;
       }
 
-      int canMoveCount = 0;
-      // 2 or more players are able to move
       for (PlayerInfo player : gameState.getPlayers()) {
          if (canMove(player)) {
-            canMoveCount++;
+            return false;
          }
       }
-      return canMoveCount < 2;
+      return true;
    }
 
    private boolean canMove(PlayerInfo player) {
