@@ -1,58 +1,83 @@
 package com.videoplaza.nodewar.state;
 
+import com.videoplaza.nodewar.json.Game;
+import com.videoplaza.nodewar.json.Region;
+
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 public class Node {
 
-   private String id = UUID.randomUUID().toString();
-   private Set<Node> adjacent = new HashSet<Node>();
-   private String name;
-   private PlayerInfo occupier;
-   private int diceCount;
+   private final Game game;
 
-   public String getId() {
-      return id;
+
+   private final int regionId;
+   private final Region region;
+
+   public Node(Game game, int regionId) {
+      this.game = game;
+      this.regionId = regionId;
+      this.region = game.map.regions.get(regionId);
    }
 
-   public void setId(String id) {
-      this.id = id;
+   public Integer getId() {
+      return regionId;
    }
 
    public Set<Node> getAdjacent() {
-      return adjacent;
-   }
-
-   public void setAdjacent(Set<Node> adjacent) {
-      this.adjacent = adjacent;
+      HashSet<Node> nodes = new HashSet<>();
+      Region region = game.map.regions.get(regionId);
+      for (Integer neighbour : region.neighbours) {
+         nodes.add(new Node(game, neighbour));
+      }
+      return nodes;
    }
 
    public String getName() {
-      return name;
-   }
-
-   public void setName(String name) {
-      this.name = name;
+      return region.name;
    }
 
    public PlayerInfo getOccupier() {
-      return occupier;
-   }
-
-   public void setOccupier(PlayerInfo occupier) {
-      this.occupier = occupier;
+      return game.players.get(game.occupants.get(regionId).player);
    }
 
    public int getDiceCount() {
-      return diceCount;
-   }
-
-   public void setDiceCount(int diceCount) {
-      this.diceCount = diceCount;
+      return game.occupants.get(regionId).strength;
    }
 
    public String toString() {
-      return (occupier == null ? "" : occupier + ":") + diceCount;
+      return (getOccupier() == null ? "" : getOccupier() + ":") + getDiceCount();
    }
+
+   public void setOccupier(PlayerInfo occupier) {
+      game.occupants.get(regionId).player = occupier.getId();
+   }
+
+   public void setDiceCount(int diceCount) {
+      game.occupants.get(regionId).strength = diceCount;
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) {
+         return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+         return false;
+      }
+
+      Node node = (Node) o;
+
+      if (regionId != node.regionId) {
+         return false;
+      }
+
+      return true;
+   }
+
+   @Override
+   public int hashCode() {
+      return regionId;
+   }
+
 }

@@ -1,46 +1,38 @@
 package com.videoplaza.nodewar.state;
 
-import com.videoplaza.nodewar.mechanics.Player;
-
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.videoplaza.nodewar.json.Game;
+import com.videoplaza.nodewar.mechanics.PlayerController;
 
 public class PlayerInfo {
 
-   private String id = UUID.randomUUID().toString();
-   private String name;
-   private Player playerImplementation;
+   @JsonIgnore
+   public Game game;
+   public int id;
+   public String name;
+   public String implementation;
+   public String argument;
 
-   public PlayerInfo(String name, Player playerImplementation) {
+   public PlayerInfo(String name, String implementation, String argument) {
       this.name = name;
-      this.playerImplementation = playerImplementation;
+      this.implementation = implementation;
+      this.argument = argument;
    }
 
-   public String getId() {
+   public Integer getId() {
       return id;
    }
 
-   public void setId(String id) {
-      this.id = id;
-   }
-
-   public Player getPlayerImplementation() {
-      return playerImplementation;
-   }
-
-   public void setPlayerImplementation(Player playerImplementation) {
-      this.playerImplementation = playerImplementation;
+   public PlayerController getPlayerImplementation() {
+      return game.controllers.get(id);
    }
 
    public String getName() {
-      return name;
-   }
-
-   public void setName(String name) {
-      this.name = name;
+      return game.players.get(id).name;
    }
 
    public String toString() {
-      return name;
+      return getName();
    }
 
 }

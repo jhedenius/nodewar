@@ -1,18 +1,20 @@
 package com.videoplaza.nodewar.mechanics;
 
-import com.videoplaza.nodewar.state.GameState;
+import com.videoplaza.nodewar.json.Game;
 import com.videoplaza.nodewar.state.Node;
 import com.videoplaza.nodewar.state.PlayerInfo;
 import com.videoplaza.nodewar.utils.GameStateUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 public class GameEngine {
-   private GameState gameState;
+   private Game gameState;
    private final Random random;
 
-   public GameEngine(GameState gameState, long randomSeed) {
+   public GameEngine(Game gameState, long randomSeed) {
       this.gameState = gameState;
       random = new Random(randomSeed);
    }
@@ -21,7 +23,7 @@ public class GameEngine {
       say("Starting game", null);
       while (!isGameOver()) {
          doTurn();
-         gameState.setCurrentTurn(gameState.getCurrentTurn()+1);
+         gameState.setCurrentTurn(gameState.getCurrentTurn() + 1);
       }
       say("Game over. Winner is " + getWinner().getName(), null);
    }
@@ -40,12 +42,18 @@ public class GameEngine {
    private void doTurn() {
       for (PlayerInfo player : gameState.getPlayers()) {
          gameState.setCurrentPlayer(player);
+         System.out.println(gameState.toJson());
          Move playerMove = player.getPlayerImplementation().getNextMove(gameState);
-         while(playerMove != null && playerMove.getMoveType() != MoveType.DONE){
+         while (playerMove != null && playerMove.getMoveType() != MoveType.DONE) {
+            gameState.apply(playerMove);
             applyMove(player, playerMove);
+            System.out.println(gameState.toJson());
             playerMove = player.getPlayerImplementation().getNextMove(gameState);
          }
-         GameStateUtils.reinforce(player, gameState, random);
+         playerMove.setReinforcements(GameStateUtils.reinforce(player, gameState, random));
+
+         gameState.apply(playerMove);
+
       }
    }
 
@@ -55,7 +63,10 @@ public class GameEngine {
 
       say(move.getComment(), player);
 
-      if (winBattle(move.getFromNode().getDiceCount(), move.getToNode().getDiceCount())) {
+
+      move.setAttackerRoll(rollDice(move.getFromNode().getDiceCount()));
+      move.setDefenderRoll(rollDice(move.getToNode().getDiceCount()));
+      if (winBattle(move)) {
          applyWin(move);
       } else {
          applyLoss(move);
@@ -63,22 +74,26 @@ public class GameEngine {
 
    }
 
+   private boolean winBattle(Move move) {
+      return sum(move.getAttackerRoll()) > sum(move.getDefenderRoll());
+   }
+
    private void applyWin(Move move) {
       int diceCountFrom = move.getFromNode().getDiceCount();
       move.getToNode().setDiceCount(diceCountFrom - 1);
       move.getToNode().setOccupier(move.getFromNode().getOccupier());
       move.getFromNode().setDiceCount(1);
-      say("Player " + move.getFromNode().getOccupier().getName() + " occupies " + move.getToNode().getName(), null);
+      say("PlayerController " + move.getFromNode().getOccupier().getName() + " occupies " + move.getToNode().getName(), null);
    }
 
    private void applyLoss(Move move) {
       move.getFromNode().setDiceCount(1);
-      say("Player " + move.getFromNode().getOccupier().getName() + " failed to occupy " + move.getToNode().getName(), null);
+      say("PlayerController " + move.getFromNode().getOccupier().getName() + " failed to occupy " + move.getToNode().getName(), null);
    }
 
    private void say(String message, PlayerInfo playerInfo) {
       try {
-         Thread.sleep(500);
+         //Thread.sleep(500);
       } catch (Exception e) {
 
       }
@@ -88,19 +103,20 @@ public class GameEngine {
          System.out.println(playerInfo.getName() + ": " + message);
    }
 
-   private boolean winBattle(int diceCount1, int diceCount2) {
-      int diceSum1 = rollDice(diceCount1);
-      int diceSum2 = rollDice(diceCount2);
-
-      return diceSum1 > diceSum2;
-   }
-
-   private int rollDice(int diceCount) {
+   private int sum(List<Integer> is) {
       int sum = 0;
-      for (int i = 0; i < diceCount; i++) {
-         sum += random.nextInt(6) + 1;
+      for (int i : is) {
+         sum += i;
       }
       return sum;
+   }
+
+   private List<Integer> rollDice(int diceCount) {
+      List<Integer> result = new ArrayList<Integer>();
+      for (int i = 0; i < diceCount; i++) {
+         result.add(random.nextInt(6) + 1);
+      }
+      return result;
    }
 
    private boolean validMove(PlayerInfo player, Move move) {
@@ -130,7 +146,7 @@ public class GameEngine {
 
    private boolean isGameOver() {
 
-      if(gameState.getCurrentTurn() > gameState.getMaxTurns()){
+      if (gameState.getCurrentTurn() > gameState.getMaxTurns()) {
          System.out.println("Max turns reached, game over");
          return true;
       }
@@ -145,11 +161,11 @@ public class GameEngine {
    }
 
    private boolean canMove(PlayerInfo player) {
-      Set<Node> nodes =  GameStateUtils.getPlayerNodes(player, gameState);
-      for(Node node:nodes){
-         if(node.getDiceCount() > 1){
-            for(Node adjacent:node.getAdjacent()){
-               if(adjacent.getOccupier() != player){
+      Set<Node> nodes = GameStateUtils.getPlayerNodes(player, gameState);
+      for (Node node : nodes) {
+         if (node.getDiceCount() > 1) {
+            for (Node adjacent : node.getAdjacent()) {
+               if (adjacent.getOccupier() != player) {
                   return true;
                }
             }

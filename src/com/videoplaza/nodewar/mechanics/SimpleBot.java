@@ -1,6 +1,6 @@
 package com.videoplaza.nodewar.mechanics;
 
-import com.videoplaza.nodewar.state.GameState;
+import com.videoplaza.nodewar.json.Game;
 import com.videoplaza.nodewar.state.Node;
 import com.videoplaza.nodewar.state.PlayerInfo;
 import com.videoplaza.nodewar.utils.GameStateUtils;
@@ -10,10 +10,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class SimpleBot implements Player {
+public class SimpleBot implements PlayerController {
 
    @Override
-   public Move getNextMove(GameState gameState) {
+   public Move getNextMove(Game gameState) {
 
       PlayerInfo playerInfo = gameState.getCurrentPlayer();
 

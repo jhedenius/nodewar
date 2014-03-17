@@ -1,6 +1,6 @@
 package com.videoplaza.nodewar.mechanics;
 
-import com.videoplaza.nodewar.state.GameState;
+import com.videoplaza.nodewar.json.Game;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 
-public class HttpBot implements Player {
+public class HttpBot implements PlayerController {
 
    private final String url;
    private HttpClient httpClient;
@@ -24,10 +24,10 @@ public class HttpBot implements Player {
    }
 
    @Override
-   public Move getNextMove(GameState gameState) {
+   public Move getNextMove(Game gameState) {
       try {
          StringEntity entity = new StringEntity(
-            "{ \"game\": 1 }", // gameState.toJSON() or somesuch
+            gameState.toJson(),
             ContentType.APPLICATION_JSON
          );
 
