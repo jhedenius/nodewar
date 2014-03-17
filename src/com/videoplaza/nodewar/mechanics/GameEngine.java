@@ -29,13 +29,11 @@ public class GameEngine {
       if (!isGameOver())
          return null;
 
-      for (PlayerInfo player : gameState.getPlayers()) {
-         if (canMove(player)) {
-            return player;
-         }
-      }
+      Score winningScore = GameStateUtils.getLeader(gameState);
 
-      return null;
+      System.out.println("Winning score: " + winningScore);
+
+      return winningScore.getPlayerInfo();
    }
 
    private void doTurn() {
