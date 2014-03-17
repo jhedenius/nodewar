@@ -27,7 +27,7 @@ public class SimpleBot implements Player {
       });
 
       for (Node node : ownedNodes) {
-         if (node.getDiceCount() == 0) {
+         if (node.getDiceCount() < 2) {
             continue;
          }
 

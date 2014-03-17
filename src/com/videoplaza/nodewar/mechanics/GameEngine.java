@@ -63,10 +63,15 @@ public class GameEngine {
 
    private void applyWin(Move move) {
       int diceCountFrom = move.getFromNode().getDiceCount();
-      move.getToNode().setDiceCount(diceCountFrom > 1 ? diceCountFrom - 1 : 1);
+      move.getToNode().setDiceCount(diceCountFrom - 1);
       move.getToNode().setOccupier(move.getFromNode().getOccupier());
-      move.getFromNode().setDiceCount(diceCountFrom > 1 ? 1 : 0);
+      move.getFromNode().setDiceCount(1);
       say("Player " + move.getFromNode().getOccupier().getName() + " occupies " + move.getToNode().getName(), null);
+   }
+
+   private void applyLoss(Move move) {
+      move.getFromNode().setDiceCount(1);
+      say("Player " + move.getFromNode().getOccupier().getName() + " failed to occupy " + move.getToNode().getName(), null);
    }
 
    private void say(String message, PlayerInfo playerInfo) {
@@ -115,8 +120,8 @@ public class GameEngine {
       if (toNode.getOccupier() != null && toNode.getOccupier().getId().equals(player.getId()))
          return false;
 
-      // player must have at least one dice on fromNode
-      if (fromNode.getDiceCount() <= 0)
+      // player must have at least two dice on fromNode
+      if (fromNode.getDiceCount() < 2)
          return false;
 
       return true;
