@@ -28,8 +28,8 @@ exports.process = function(request) {
 
    return {
       "moveType": "MOVE",
-      "from": mahHeadQuartersYo[0],
-      "to": randomElement(mahHQNeighbours),
+      "fromNode": mahHeadQuartersYo[0],
+      "toNode": randomElement(mahHQNeighbours),
       "comment": randomElement(quotes)
    };
 };
