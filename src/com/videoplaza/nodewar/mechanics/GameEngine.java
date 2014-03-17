@@ -44,6 +44,7 @@ public class GameEngine {
             applyMove(player, playerMove);
             playerMove = player.getPlayerImplementation().getNextMove(gameState);
          }
+         GameStateUtils.reinforce(player, gameState);
       }
    }
 

@@ -22,6 +22,29 @@ public class GameStateUtils {
       return ownedNodes;
    }
 
+   public static void reinforce(PlayerInfo playerInfo, GameState gameState){
+      int largestConnectedTerritory = getLargestConnectedGraph(playerInfo, gameState);
+      System.out.println("Player " + playerInfo.getName() + " largest connected: " + largestConnectedTerritory);
+   }
+
+   private static int getLargestConnectedGraph(PlayerInfo playerInfo, GameState gameState) {
+      int maxSize = -1;
+      for(Node node:getPlayerNodes(playerInfo, gameState)){
+         maxSize = Math.max(getSize(playerInfo, node, new HashSet<Node>()), maxSize);
+      }
+      return maxSize;
+   }
+
+   private static int getSize(PlayerInfo player, Node node, Set<Node> visited) {
+      visited.add(node);
+      for(Node adjacent:node.getAdjacent()){
+         if(adjacent.getOccupier() != null && adjacent.getOccupier().getId().equals(player.getId()) && !(visited.contains(adjacent))){
+            getSize(player, adjacent, visited);
+         }
+      }
+      return visited.size();
+   }
+
    public static Score getLeader(GameState gameState) {
 
       SortedSet<Score> playerScores = new TreeSet<>(new Comparator<Score>() {
