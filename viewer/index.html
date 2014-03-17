@@ -46,6 +46,7 @@ var map = {"src":"uk.jpg","regions":[{"id":0,"x":417,"y":294,"neighbours":[41,40
 var selected = null;
 var divs = [];
 
+/*
 var game = {
 	map: map,
 	players: [
@@ -66,14 +67,24 @@ var game = {
 			{region:1, strength: 1},
 		]},
 		{type: "attack", player:1, attackerRoll: [6,6,5,5,1], defenderRoll: [2, 2], from: 2, to: 0},
-		{type: "attack", player:1, attackerRoll: [1,2,2,1], defenderRoll: [5, 2, 2, 1], from: 0, to: 1},
+		{type: "attack", player:1, attackerRoll: [6,2,2,1], defenderRoll: [5, 2, 2, 1], from: 0, to: 1},
 		{type: "end_turn", player:1, reinforcements: [
 			{region:0, strength: 1},
 			{region:1, strength: 1},
 			{region:2, strength: 1},
 		]},
 	]
-}
+}*/
+var bla = {"map":{"src":null,"regions":[{"id":0,"x":0,"y":0,"name":"a0","neighbours":[3,1]},{"id":1,"x":0,"y":50,"name":"a1","neighbours":[4,0,2]},{"id":2,"x":0,"y":100,"name":"a2","neighbours":[5,1]},{"id":3,"x":50,"y":0,"name":"b0","neighbours":[0,6,4]},{"id":4,"x":50,"y":50,"name":"b1","neighbours":[1,7,3,5]},{"id":5,"x":50,"y":100,"name":"b2","neighbours":[2,8,4]},{"id":6,"x":100,"y":0,"name":"c0","neighbours":[3,7]},{"id":7,"x":100,"y":50,"name":"c1","neighbours":[4,6,8]},{"id":8,"x":100,"y":100,"name":"c2","neighbours":[5,7]}]},"players":[{"id":0,"name":"p1","implementation":"SimpleBot","argument":null},{"id":1,"name":"p2","implementation":"SimpleBot","argument":null},{"id":2,"name":"p3","implementation":"SimpleBot","argument":null},{"id":3,"name":"p4","implementation":"SimpleBot","argument":null},{"id":4,"name":"p5","implementation":"SimpleBot","argument":null}],"occupants":{"0":{"player":0,"strength":8},"1":{"player":4,"strength":1},"2":{"player":1,"strength":8},"3":{"player":0,"strength":0},"4":{"player":0,"strength":0},"5":{"player":0,"strength":0},"6":{"player":2,"strength":8},"7":{"player":4,"strength":1},"8":{"player":3,"strength":8}},"moves":[],"currentPlayer":0,"currentTurn":0,"maxTurns":100}
+
+var game = {"map":{"regions":[{"id":0,"x":200,"y":200,"name":"a0","neighbours":[3,1]},{"id":1,"x":200,"y":250,"name":"a1","neighbours":[4,0,2]},{"id":2,"x":200,"y":300,"name":"a2","neighbours":[5,1]},{"id":3,"x":250,"y":200,"name":"b0","neighbours":[0,6,4]},{"id":4,"x":250,"y":250,"name":"b1","neighbours":[1,7,3,5]},{"id":5,"x":250,"y":300,"name":"b2","neighbours":[2,8,4]},{"id":6,"x":300,"y":200,"name":"c0","neighbours":[3,7]},{"id":7,"x":300,"y":250,"name":"c1","neighbours":[4,6,8]},{"id":8,"x":300,"y":300,"name":"c2","neighbours":[5,7]}]},"players":[{"id":0,"name":"p1","implementation":"SimpleBot"},{"id":1,"name":"p2","implementation":"SimpleBot"},{"id":2,"name":"p3","implementation":"SimpleBot"},{"id":3,"name":"p4","implementation":"SimpleBot"},{"id":4,"name":"p5","implementation":"SimpleBot"}],"occupants":{"0":{"player":0,"strength":5},"1":{"player":0,"strength":1},"2":{"player":0,"strength":3},"3":{"player":0,"strength":3},"4":{"player":0,"strength":3},"5":{"player":0,"strength":1},"6":{"player":0,"strength":5},"7":{"player":0,"strength":5},"8":{"player":0,"strength":4}},"moves":[{"type":"MOVE","comment":"Attack","from":0,"to":1,"player":0,"attackerRoll":[1,5,2,6,6,6,6,4],"defenderRoll":[4]},{"type":"MOVE","comment":"Attack","from":1,"to":2,"player":0,"attackerRoll":[3,6,6,6,5,6,3],"defenderRoll":[5,4,6,3,2,1,3,6]},{"type":"DONE","comment":"Can't move","player":0,"reinforcements":[{"region":0,"strength":1},{"region":1,"strength":1},{"region":3,"strength":1},{"region":4,"strength":1},{"region":5,"strength":2}]},{"type":"DONE","comment":"Can't move","player":1,"reinforcements":[]},{"type":"MOVE","comment":"Attack","from":6,"to":3,"player":2,"attackerRoll":[6,6,6,6,3,3,4,6],"defenderRoll":[5]},{"type":"MOVE","comment":"Attack","from":3,"to":4,"player":2,"attackerRoll":[4,3,2,6,3,5,4],"defenderRoll":[5]},{"type":"MOVE","comment":"Attack","from":4,"to":7,"player":2,"attackerRoll":[5,5,1,2,4,3],"defenderRoll":[1]},{"type":"MOVE","comment":"Attack","from":7,"to":8,"player":2,"attackerRoll":[4,5,5,6,4],"defenderRoll":[2,6,5,2,1,1,4,2]},{"type":"MOVE","comment":"Attack","from":8,"to":5,"player":2,"attackerRoll":[3,5,1,3],"defenderRoll":[5,6]},{"type":"MOVE","comment":"Attack","from":5,"to":2,"player":2,"attackerRoll":[6,3,1],"defenderRoll":[6,1,2,5,2,4]},{"type":"DONE","comment":"Can't move","player":2,"reinforcements":[{"region":4,"strength":1},{"region":5,"strength":4},{"region":8,"strength":1}]},{"type":"DONE","comment":"Can't move","player":3,"reinforcements":[]},{"type":"DONE","comment":"Can't move","player":4,"reinforcements":[]},{"type":"MOVE","comment":"Attack","from":2,"to":5,"player":0,"attackerRoll":[4,2,4,5,1,1],"defenderRoll":[3,2,4,1,4]},{"type":"MOVE","comment":"Attack","from":5,"to":4,"player":0,"attackerRoll":[4,3,4,6,6],"defenderRoll":[4,2]},{"type":"MOVE","comment":"Attack","from":4,"to":3,"player":0,"attackerRoll":[4,4,1,2],"defenderRoll":[5]},{"type":"MOVE","comment":"Attack","from":3,"to":6,"player":0,"attackerRoll":[6,5,2],"defenderRoll":[2]},{"type":"MOVE","comment":"Attack","from":6,"to":7,"player":0,"attackerRoll":[2,1],"defenderRoll":[2]},{"type":"DONE","comment":"Can't move","player":0,"reinforcements":[{"region":0,"strength":1},{"region":1,"strength":2},{"region":2,"strength":2},{"region":3,"strength":1},{"region":6,"strength":2}]},{"type":"DONE","comment":"Can't move","player":1,"reinforcements":[]},{"type":"MOVE","comment":"Attack","from":8,"to":5,"player":2,"attackerRoll":[5,3],"defenderRoll":[5]},{"type":"DONE","comment":"Can't move","player":2,"reinforcements":[{"region":8,"strength":2}]},{"type":"DONE","comment":"Can't move","player":3,"reinforcements":[]},{"type":"DONE","comment":"Can't move","player":4,"reinforcements":[]},{"type":"MOVE","comment":"Attack","from":2,"to":5,"player":0,"attackerRoll":[6,4,6],"defenderRoll":[2]},{"type":"MOVE","comment":"Attack","from":5,"to":8,"player":0,"attackerRoll":[5,6],"defenderRoll":[3,5,4]},{"type":"DONE","comment":"Can't move","player":0,"reinforcements":[{"region":1,"strength":1},{"region":2,"strength":1},{"region":3,"strength":1},{"region":4,"strength":1},{"region":5,"strength":3},{"region":6,"strength":1}]},{"type":"DONE","comment":"Can't move","player":1,"reinforcements":[]},{"type":"MOVE","comment":"Attack","from":8,"to":7,"player":2,"attackerRoll":[6,6,5],"defenderRoll":[2]},{"type":"MOVE","comment":"Attack","from":7,"to":4,"player":2,"attackerRoll":[6,6],"defenderRoll":[3,1]},{"type":"DONE","comment":"Can't move","player":2,"reinforcements":[{"region":4,"strength":1},{"region":8,"strength":2}]},{"type":"DONE","comment":"Can't move","player":3,"reinforcements":[]},{"type":"DONE","comment":"Can't move","player":4,"reinforcements":[]},{"type":"MOVE","comment":"Attack","from":1,"to":4,"player":0,"attackerRoll":[4,6,4,1,6],"defenderRoll":[6,6]},{"type":"MOVE","comment":"Attack","from":4,"to":7,"player":0,"attackerRoll":[6,5,6,5],"defenderRoll":[1]},{"type":"MOVE","comment":"Attack","from":5,"to":8,"player":0,"attackerRoll":[5,3,4,2],"defenderRoll":[2,4,2]},{"type":"DONE","comment":"Can't move","player":0,"reinforcements":[{"region":0,"strength":2},{"region":2,"strength":1},{"region":4,"strength":2},{"region":6,"strength":1},{"region":7,"strength":2},{"region":8,"strength":1}]},{"type":"DONE","comment":"Can't move","player":1,"reinforcements":[]},{"type":"DONE","comment":"Can't move","player":2,"reinforcements":[]},{"type":"DONE","comment":"Can't move","player":3,"reinforcements":[]}],"currentPlayer":4,"currentTurn":3,"maxTurns":100}
+
+
+
+
+
+;
+game.occupants = bla.occupants;
 
 var sounds = {
     fanfare:new Audio("sound/FanFare.mp3"),
@@ -88,7 +99,7 @@ var sounds = {
 $("#load").click(function() {
 	//render(JSON.parse($("#output").val()))
 });
-var colors = ["red", "blue", "green", "yellow"];
+var colors = ["red", "blue", "green", "yellow", "purple"];
 function render(game) {
 	selected = null;
 	divs = [];
@@ -124,7 +135,9 @@ function render(game) {
 var nextMove = 0;
 function doMove() {
 	var move = game.moves[nextMove++];
-	if (move.type=="attack") {
+	console.log(move);
+	if (move.type=="MOVE") {
+		console.log("animating")
 		var temp = createRegionDiv(game.map.regions[move.from]);
 		temp.style.backgroundColor = colors[game.occupants[move.from].player];
 		temp.innerText = game.occupants[move.from].strength;
@@ -159,7 +172,7 @@ function doMove() {
 		setStrengthAtRegion(move.from, 1);
 		setTimeout(function() {
 		}, 1000);
-	} else if (move.type=="end_turn") {
+	} else if (move.type=="DONE") {
 		var player = game.players[move.player];
 		log(player.name + "'s turn ends.");
 		var total = move.reinforcements.reduce(function(sum, reinforcement) {
@@ -193,6 +206,7 @@ function setStrengthAtRegion(regionId, strength){
 
 
 function reinforce(player, regions) {
+	console.log("reinforce()", regions);
 	var next = 0;
 	var placeOne = function(regionId) {
 		game.map.regions[regionId]
@@ -226,7 +240,7 @@ function reinforce(player, regions) {
             sounds.reinforcement.play();
 		});
 	}
-	placeOne(regions[next++]);
+	if (next < regions.length) placeOne(regions[next++]);
 }
 
 function createRegionDiv(region) {
