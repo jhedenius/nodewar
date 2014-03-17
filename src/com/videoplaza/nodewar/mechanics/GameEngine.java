@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class GameEngine {
    private GameState gameState;
-   private Random random;
+   private final Random random;
 
    public GameEngine(GameState gameState, long randomSeed) {
       this.gameState = gameState;
@@ -19,7 +19,8 @@ public class GameEngine {
    public void startGame() {
       say("Starting game", null);
       while (!isGameOver()) {
-         doRound();
+         doTurn();
+         gameState.setCurrentTurn(gameState.getCurrentTurn()+1);
       }
       say("Game over. Winner is " + getWinner().getName(), null);
    }
@@ -37,12 +38,14 @@ public class GameEngine {
       return null;
    }
 
-   private void doRound() {
+   private void doTurn() {
       for (PlayerInfo player : gameState.getPlayers()) {
          gameState.setCurrentPlayer(player);
-         //System.out.println("Player " + player.getName() + " move.");
          Move playerMove = player.getPlayerImplementation().getNextMove(gameState);
-         applyMove(player, playerMove);
+         while(playerMove != null && playerMove.getMoveType() != MoveType.DONE){
+            applyMove(player, playerMove);
+            playerMove = player.getPlayerImplementation().getNextMove(gameState);
+         }
       }
    }
 
@@ -120,6 +123,11 @@ public class GameEngine {
    }
 
    private boolean isGameOver() {
+
+      if(gameState.getCurrentTurn() > gameState.getMaxTurns()){
+         return true;
+      }
+
       int canMoveCount = 0;
       // 2 or more players are able to move
       for (PlayerInfo player : gameState.getPlayers()) {

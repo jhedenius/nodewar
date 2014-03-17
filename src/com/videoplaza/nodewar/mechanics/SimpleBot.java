@@ -32,7 +32,6 @@ public class SimpleBot implements Player {
          }
 
          List<Node> adjacentNodes = Arrays.asList(node.getAdjacent().toArray(new Node[] { }));
-
          Collections.sort(adjacentNodes, new Comparator<Node>() {
             @Override
             public int compare(Node o1, Node o2) {
@@ -41,14 +40,13 @@ public class SimpleBot implements Player {
          });
 
          for (Node adjacent : adjacentNodes) {
-
             if (adjacent.getOccupier() == null || !adjacent.getOccupier().equals(playerInfo)) {
-               return new Move(node, adjacent, "Attack");
+               return new Move(node, adjacent, "Attack", MoveType.MOVE);
             }
          }
       }
 
-      return new Move(null, null, "Can't move");
+      return new Move(null, null, "Can't move", MoveType.DONE);
    }
 
 }

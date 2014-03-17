@@ -4,15 +4,16 @@ import com.videoplaza.nodewar.state.Node;
 
 public class Move {
 
-   private Type type;
+   private MoveType moveType;
    private Node fromNode;
    private Node toNode;
    private String comment;
 
-   public Move(Node fromNode, Node toNode, String comment) {
+   public Move(Node fromNode, Node toNode, String comment, MoveType moveType) {
       this.fromNode = fromNode;
       this.toNode = toNode;
       this.comment = comment;
+      this.moveType = moveType;
    }
 
    public String getComment() {
@@ -40,12 +41,12 @@ public class Move {
    }
 
 
-   public Type getType() {
-      return type;
+   public MoveType getMoveType() {
+      return moveType;
    }
 
-   public void setType(Type type) {
-      this.type = type;
+   public void setMoveType(MoveType moveType) {
+      this.moveType = moveType;
    }
 
    public String toString() {

@@ -10,6 +10,8 @@ public class GameState {
    private Map<String, Node> nodes = new HashMap<String, Node>();
    private Set<PlayerInfo> players = new HashSet<PlayerInfo>();
    private PlayerInfo currentPlayer;
+   private int maxTurns;
+   private int currentTurn;
 
    public Map<String, Node> getNodes() {
       return nodes;
@@ -35,4 +37,19 @@ public class GameState {
       this.currentPlayer = currentPlayer;
    }
 
+   public int getMaxTurns() {
+      return maxTurns;
+   }
+
+   public void setMaxTurns(int maxTurns) {
+      this.maxTurns = maxTurns;
+   }
+
+   public int getCurrentTurn() {
+      return currentTurn;
+   }
+
+   public void setCurrentTurn(int currentTurn) {
+      this.currentTurn = currentTurn;
+   }
 }
