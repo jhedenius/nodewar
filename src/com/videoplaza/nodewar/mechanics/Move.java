@@ -4,6 +4,7 @@ import com.videoplaza.nodewar.state.Node;
 
 public class Move {
 
+   private Type type;
    private Node fromNode;
    private Node toNode;
    private String comment;
@@ -36,6 +37,15 @@ public class Move {
 
    public void setToNode(Node toNode) {
       this.toNode = toNode;
+   }
+
+
+   public Type getType() {
+      return type;
+   }
+
+   public void setType(Type type) {
+      this.type = type;
    }
 
    public String toString() {
