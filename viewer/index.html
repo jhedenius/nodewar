@@ -236,8 +236,8 @@ function reinforce(player, regions) {
 			temp.remove();
 			setStrengthAtRegion(regionId,game.occupants[regionId].strength + 1);
 			divs[regionId].innerText=game.occupants[regionId].strength;
-			if (next < regions.length) placeOne(regions[next++]);
             sounds.reinforcement.play();
+			if (next < regions.length) placeOne(regions[next++]);
 		});
 	}
 	if (next < regions.length) placeOne(regions[next++]);
