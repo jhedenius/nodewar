@@ -57,6 +57,8 @@ public class GameEngine {
 
       if (winBattle(move.getFromNode().getDiceCount(), move.getToNode().getDiceCount())) {
          applyWin(move);
+      } else {
+         applyLoss(move);
       }
 
    }
@@ -76,15 +78,14 @@ public class GameEngine {
 
    private void say(String message, PlayerInfo playerInfo) {
       try {
-         Thread.sleep(1000);
+         Thread.sleep(500);
       } catch (Exception e) {
 
       }
       if (playerInfo == null)
-         ;
-      //System.out.println("Game: " + message);
-      //else
-      //System.out.println(playerInfo.getName() + ": " + message);
+         System.out.println("Game host: " + message);
+      else
+         System.out.println(playerInfo.getName() + ": " + message);
    }
 
    private boolean winBattle(int diceCount1, int diceCount2) {
