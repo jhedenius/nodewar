@@ -46,7 +46,6 @@ var map = {"src":"uk.jpg","regions":[{"id":0,"x":417,"y":294,"neighbours":[41,40
 var selected = null;
 var divs = [];
 
-
 var game = {
 	map: map,
 	players: [
@@ -67,7 +66,7 @@ var game = {
 			{region:1, strength: 1},
 		]},
 		{type: "attack", player:1, attackerRoll: [6,6,5,5,1], defenderRoll: [2, 2], from: 2, to: 0},
-		{type: "attack", player:1, attackerRoll: [6,2,2,1], defenderRoll: [5, 2, 2, 1], from: 0, to: 1},
+		{type: "attack", player:1, attackerRoll: [1,2,2,1], defenderRoll: [5, 2, 2, 1], from: 0, to: 1},
 		{type: "end_turn", player:1, reinforcements: [
 			{region:0, strength: 1},
 			{region:1, strength: 1},
@@ -75,6 +74,16 @@ var game = {
 		]},
 	]
 }
+
+var sounds = {
+    fanfare:new Audio("sound/FanFare.mp3"),
+    win_game:new Audio("sound/FanFareWin.mp3"),
+    win_battle:new Audio("sound/SwordStab.mp3"),
+    lose_battle:new Audio("sound/SwordClank.mp3"),
+    reinforcement:new Audio("sound/bonk.mp3")
+}
+
+
 
 $("#load").click(function() {
 	//render(JSON.parse($("#output").val()))
@@ -136,6 +145,12 @@ function doMove() {
 			divs[move.to].style.backgroundColor=colors[game.occupants[move.to].player];
 			divs[move.to].innerText=game.occupants[move.to].strength;
 			log(attacker.name + " attacks and rolls " + move.attackerRoll.join("+") + "="+attackerSum+", " + defender.name + " defends and rolls " + move.defenderRoll.join("+") + "=" + defenderSum);
+            if (attackerSum > defenderSum) {
+                sounds.win_battle.play();
+            } else {
+                sounds.lose_battle.play();
+            }
+
 		});
 		if (attackerSum > defenderSum) {
 			setStrengthAtRegion(move.to, game.occupants[move.from].strength - 1);
@@ -203,11 +218,12 @@ function reinforce(player, regions) {
 		$("#regions").append(temp);
 		pos.width = 30;
 		pos.height= 30;
-		$(temp).animate(endCss, 250, function() {
+		$(temp).animate(endCss, 500, function() {
 			temp.remove();
 			setStrengthAtRegion(regionId,game.occupants[regionId].strength + 1);
 			divs[regionId].innerText=game.occupants[regionId].strength;
 			if (next < regions.length) placeOne(regions[next++]);
+            sounds.reinforcement.play();
 		});
 	}
 	placeOne(regions[next++]);
