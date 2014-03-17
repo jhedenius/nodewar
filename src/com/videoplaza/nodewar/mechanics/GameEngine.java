@@ -6,6 +6,7 @@ import com.videoplaza.nodewar.state.PlayerInfo;
 import com.videoplaza.nodewar.utils.GameStateUtils;
 
 import java.util.Random;
+import java.util.Set;
 
 public class GameEngine {
    private GameState gameState;
@@ -44,7 +45,7 @@ public class GameEngine {
             applyMove(player, playerMove);
             playerMove = player.getPlayerImplementation().getNextMove(gameState);
          }
-         GameStateUtils.reinforce(player, gameState);
+         GameStateUtils.reinforce(player, gameState, random);
       }
    }
 
@@ -130,6 +131,7 @@ public class GameEngine {
    private boolean isGameOver() {
 
       if(gameState.getCurrentTurn() > gameState.getMaxTurns()){
+         System.out.println("Max turns reached, game over");
          return true;
       }
 
@@ -138,10 +140,21 @@ public class GameEngine {
             return false;
          }
       }
+      System.out.println("No players can move, game over");
       return true;
    }
 
    private boolean canMove(PlayerInfo player) {
-      return GameStateUtils.getPlayerNodes(player, gameState).size() > 0;
+      Set<Node> nodes =  GameStateUtils.getPlayerNodes(player, gameState);
+      for(Node node:nodes){
+         if(node.getDiceCount() > 1){
+            for(Node adjacent:node.getAdjacent()){
+               if(adjacent.getOccupier() != player){
+                  return true;
+               }
+            }
+         }
+      }
+      return false;
    }
 }

@@ -11,10 +11,13 @@ public class GameEngineTest {
    public void testGame() throws Exception {
       GameState gameState = new GameState();
 
+      gameState.setMaxTurns(100);
+
       PlayerInfo p1 = new PlayerInfo("p1", new SimpleBot());
       PlayerInfo p2 = new PlayerInfo("p2", new SimpleBot());
       PlayerInfo p3 = new PlayerInfo("p3", new SimpleBot());
       PlayerInfo p4 = new PlayerInfo("p4", new SimpleBot());
+      PlayerInfo p5 = new PlayerInfo("p5", new SimpleBot());
 
       int width = 3;
       int height = 3;
@@ -23,10 +26,14 @@ public class GameEngineTest {
 
       nodes[0][0].setOccupier(p1);
       nodes[0][0].setDiceCount(8);
+      nodes[0][1].setOccupier(p5);
+      nodes[0][1].setDiceCount(1);
       nodes[0][2].setOccupier(p2);
       nodes[0][2].setDiceCount(8);
       nodes[2][0].setOccupier(p3);
       nodes[2][0].setDiceCount(8);
+      nodes[2][1].setOccupier(p5);
+      nodes[2][1].setDiceCount(1);
       nodes[2][2].setOccupier(p4);
       nodes[2][2].setDiceCount(8);
 
@@ -34,8 +41,7 @@ public class GameEngineTest {
       gameState.getPlayers().add(p2);
       gameState.getPlayers().add(p3);
       gameState.getPlayers().add(p4);
-
-      gameState.setCurrentPlayer(p1);
+      gameState.getPlayers().add(p5);
 
       new Thread(new DebugPrint(width, height, nodes)).start();
 
