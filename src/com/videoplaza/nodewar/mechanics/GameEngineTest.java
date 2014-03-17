@@ -1,19 +1,47 @@
 package com.videoplaza.nodewar.mechanics;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.videoplaza.nodewar.json.Game;
 import com.videoplaza.nodewar.json.GameMap;
 import com.videoplaza.nodewar.json.Region;
+import com.videoplaza.nodewar.state.MapParser;
 import com.videoplaza.nodewar.state.Node;
 import com.videoplaza.nodewar.state.PlayerInfo;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class GameEngineTest {
 
    @Test
-   public void testGame() throws Exception {
+   public void testGameOnUkMap() throws Exception {
+      MapParser mapParser = new MapParser(new ObjectMapper());
+      GameMap gameMap = mapParser.loadFile(new File("mapeditor/uk.json"));
+
+      PlayerInfo p1 = new PlayerInfo("p1", "SimpleBot", null);
+      PlayerInfo p2 = new PlayerInfo("p2", "SimpleBot", null);
+      PlayerInfo p3 = new PlayerInfo("p3", "SimpleBot", null);
+      PlayerInfo p4 = new PlayerInfo("p4", "SimpleBot", null);
+      PlayerInfo p5 = new PlayerInfo("p5", "SimpleBot", null);
+      List<PlayerController> bots = Arrays.asList((PlayerController) new SimpleBot(), new SimpleBot(), new SimpleBot(), new SimpleBot(),
+         new SimpleBot());
+      Game gameState = new Game(gameMap, Arrays.asList(p1, p2, p3, p4, p5), bots);
+      gameState.setMaxTurns(100);
+      Random random = new Random(0x5EED);
+      for (Region region : gameMap.regions) {
+         gameState.occupants.get(region.id).player = random.nextInt(5);
+         gameState.occupants.get(region.id).strength = random.nextInt(6)+1;
+      }
+      String initial = gameState.toJson();
+      new GameEngine(gameState, 0).startGame();
+      System.out.println("Initial state was: " + initial);
+   }
+
+   @Test
+   public void testGameOnSimpleMatrix() throws Exception {
       GameMap gameMap = new GameMap();
       int width = 3;
       int height = 3;
@@ -24,12 +52,11 @@ public class GameEngineTest {
       PlayerInfo p4 = new PlayerInfo("p4", "SimpleBot", null);
       PlayerInfo p5 = new PlayerInfo("p5", "SimpleBot", null);
 
-      List<PlayerController> bots = Arrays.asList((PlayerController)new SimpleBot(), new SimpleBot(), new SimpleBot(), new SimpleBot(),
+      List<PlayerController> bots = Arrays.asList((PlayerController) new SimpleBot(), new SimpleBot(), new SimpleBot(), new SimpleBot(),
          new SimpleBot());
       Game gameState = new Game(gameMap, Arrays.asList(p1, p2, p3, p4, p5), bots);
 
       gameState.setMaxTurns(100);
-
 
       new Node(gameState, nodes[0][0].id).setOccupier(p1);
       new Node(gameState, nodes[0][0].id).setDiceCount(8);
@@ -59,8 +86,8 @@ public class GameEngineTest {
             node.setName(String.valueOf("abcdefghijklmnopqrstuvw".toCharArray()[x] + String.valueOf(y)));
             nodes[x][y] = node;
             node.id = map.regions.size();
-            node.x = x*50+200;
-            node.y = y*50+200;
+            node.x = x * 50 + 200;
+            node.y = y * 50 + 200;
             map.regions.add(node);
          }
       }
