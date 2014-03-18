@@ -42,4 +42,7 @@ public class PlayerInfo {
       return implementation;
    }
 
+   public String getArgument() {
+      return argument;
+   }
 }

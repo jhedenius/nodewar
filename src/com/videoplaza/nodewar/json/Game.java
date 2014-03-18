@@ -12,10 +12,14 @@ import com.videoplaza.nodewar.state.PlayerInfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 public class Game {
 
@@ -26,7 +30,15 @@ public class Game {
 
       List<PlayerController> controllers = new ArrayList<>();
       for(PlayerInfo player:players){
-         controllers.add((PlayerController) Class.forName(player.getImplementation()).newInstance());
+
+         if(player.getArgument() != null){
+            Constructor constructor = Class.forName(player.getImplementation()).getConstructor(String.class);
+            controllers.add((PlayerController) constructor.newInstance(player.getArgument()));
+         } else{
+            Constructor constructor = Class.forName(player.getImplementation()).getConstructor();
+            controllers.add((PlayerController) constructor.newInstance());
+         }
+
       }
 
       this.map = map;
@@ -133,5 +145,24 @@ public class Game {
 
    public PlayerInfo getCurrentPlayer() {
       return players.get(currentPlayer);
+   }
+
+   public void distributeInitialRegionOccupants(long randomSeed){
+      Random random = new Random(randomSeed);
+      List<Region> nonTakenRegions = new ArrayList<>();
+
+      nonTakenRegions.addAll(map.regions);
+
+      while(nonTakenRegions.size() > 0){
+         int strength = random.nextInt(6)+1;
+         for(PlayerInfo player:players){
+            Region randomRegion = nonTakenRegions.remove(random.nextInt(nonTakenRegions.size()));
+            occupants.get(randomRegion.id).player = player.getId();
+            occupants.get(randomRegion.id).strength = strength;
+            if(nonTakenRegions.size() == 0){
+               break;
+            }
+         }
+      }
    }
 }

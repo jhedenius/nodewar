@@ -34,11 +34,8 @@ public class Main {
 
       Game gameState = new Game(gameMap, players);
       gameState.setMaxTurns(100);
-      Random random = new Random(0x5EED);
-      for (Region region : gameMap.regions) {
-         gameState.occupants.get(region.id).player = random.nextInt(players.size());
-         gameState.occupants.get(region.id).strength = random.nextInt(6)+1;
-      }
+      gameState.distributeInitialRegionOccupants(System.currentTimeMillis());
+
       String initial = gameState.toJson();
       new GameEngine(gameState, 0).startGame();
       System.out.println("Initial state was: " + initial);
@@ -61,7 +58,7 @@ public class Main {
 
    private static PlayerInfo parsePlayerInfo(String line) {
       String[] elements = line.split(",");
-      return new PlayerInfo(elements[0], elements[1], elements.length > 2 ? elements[2]: null);
+      return new PlayerInfo(elements[0].trim(), elements[1].trim(), elements.length > 2 ? elements[2].trim(): null);
    }
 
 }

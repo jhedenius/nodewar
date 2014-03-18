@@ -29,11 +29,9 @@ public class GameEngineTest {
 
       Game gameState = new Game(gameMap, Arrays.asList(p1, p2, p3, p4, p5));
       gameState.setMaxTurns(100);
-      Random random = new Random(0x5EED);
-      for (Region region : gameMap.regions) {
-         gameState.occupants.get(region.id).player = random.nextInt(5);
-         gameState.occupants.get(region.id).strength = random.nextInt(6)+1;
-      }
+
+      gameState.distributeInitialRegionOccupants(1L);
+
       Game initial = Game.fromJson(gameState.toJson());
       new GameEngine(gameState, 0).startGame();
       gameState.occupants = initial.occupants;
