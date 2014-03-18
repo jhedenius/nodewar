@@ -44,16 +44,13 @@ public class GameEngine {
          if(canMove(player))
             continue;
          gameState.setCurrentPlayer(player);
-         System.out.println(gameState.toJson());
          Move playerMove = player.getPlayerImplementation().getNextMove(gameState);
          while (playerMove != null && playerMove.getMoveType() != MoveType.DONE) {
             gameState.apply(playerMove);
             applyMove(player, playerMove);
-            System.out.println(gameState.toJson());
             playerMove = player.getPlayerImplementation().getNextMove(gameState);
          }
          playerMove.setReinforcements(GameStateUtils.reinforce(player, gameState, random));
-
          gameState.apply(playerMove);
 
       }

@@ -13,6 +13,8 @@ public class PlayerInfo {
    public String implementation;
    public String argument;
 
+   public PlayerInfo() {}
+
    public PlayerInfo(String name, String implementation, String argument) {
       this.name = name;
       this.implementation = implementation;

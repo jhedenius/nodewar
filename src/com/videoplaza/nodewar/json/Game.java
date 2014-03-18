@@ -10,6 +10,7 @@ import com.videoplaza.nodewar.mechanics.PlayerController;
 import com.videoplaza.nodewar.state.Node;
 import com.videoplaza.nodewar.state.PlayerInfo;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Game {
+   public Game() {}
    public Game(GameMap map, List<PlayerInfo> players, List<PlayerController> controllers) {
       this.map = map;
       this.players = players;
@@ -70,23 +72,39 @@ public class Game {
 
    public String toJson() {
       try {
-         ObjectMapper objectMapper = new ObjectMapper();
-         objectMapper.setVisibilityChecker(
-            objectMapper.getSerializationConfig().getDefaultVisibilityChecker().
-               withFieldVisibility(JsonAutoDetect.Visibility.ANY).
-               withGetterVisibility(JsonAutoDetect.Visibility.NONE).
-               withSetterVisibility(JsonAutoDetect.Visibility.NONE).
-               withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
-         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+         ObjectMapper objectMapper = getObjectMapper();
          return objectMapper.writeValueAsString(this);
       } catch (JsonProcessingException e) {
          throw new RuntimeException(e);
       }
    }
 
+   public void toJson(File file) {
+      try {
+         ObjectMapper objectMapper = getObjectMapper();
+         objectMapper.writeValue(file, this);
+      } catch (JsonProcessingException e) {
+         throw new RuntimeException(e);
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+   }
+
+   private static ObjectMapper getObjectMapper() {
+      ObjectMapper objectMapper = new ObjectMapper();
+      objectMapper.setVisibilityChecker(
+         objectMapper.getSerializationConfig().getDefaultVisibilityChecker().
+            withFieldVisibility(JsonAutoDetect.Visibility.ANY).
+            withGetterVisibility(JsonAutoDetect.Visibility.NONE).
+            withSetterVisibility(JsonAutoDetect.Visibility.NONE).
+            withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
+      objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+      return objectMapper;
+   }
+
    public static Game fromJson(String json) {
       try {
-         return new ObjectMapper().readValue(json, Game.class);
+         return getObjectMapper().readValue(json, Game.class);
       } catch (IOException e) {
          throw new RuntimeException(e);
       }

@@ -35,9 +35,11 @@ public class GameEngineTest {
          gameState.occupants.get(region.id).player = random.nextInt(5);
          gameState.occupants.get(region.id).strength = random.nextInt(6)+1;
       }
-      String initial = gameState.toJson();
+      Game initial = Game.fromJson(gameState.toJson());
       new GameEngine(gameState, 0).startGame();
-      System.out.println("Initial state was: " + initial);
+      gameState.occupants = initial.occupants;
+      gameState.toJson(new File("viewer/replay.json"));
+      System.out.println("Tournament done, replay written to viewer/replay.json");
    }
 
    @Test
