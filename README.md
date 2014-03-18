@@ -9,7 +9,7 @@
 * toma's graphics
 
 * replay analysis
-* combine scores
+* (AA) combine scores
 * tweak visuals
 * more maps
 * many reinforcements: game continues before animations done
