@@ -17,19 +17,31 @@ function randomElement(arr) {
 exports.process = function(request) {
    var gameState = GameState.GameState(request.body);
 
-   // just pick my strongest region
-   var mahHeadQuartersYo = _.max(gameState.myRegions(), function(elem) { return elem[1].strength; });
+   var possibleMove = null;
 
-   // get its neighbours that are enemies
-   var mahHQNeighbours = _.difference(
-      gameState.getRegion(mahHeadQuartersYo[0]).neighbours,
-      gameState.myRegionIds()
-   );
+   // just pick my strongest region with enemy neighbours
+   var mahRegionsYo = _.chain(gameState.myRegions())
+      .sortBy(function(elem) { return elem[1].strength; })
+      .each(function(elem) {
+         // get its neighbours that are enemies
+         var mahNeighbours = _.difference(
+            gameState.getRegion(elem[0]).neighbours, // myRegions() returns pairs of regionId, regionData
+            gameState.myRegionIds()
+         );
 
-   return {
-      "moveType": "MOVE",
-      "fromNode": mahHeadQuartersYo[0],
-      "toNode": randomElement(mahHQNeighbours),
-      "comment": randomElement(quotes)
+         if (mahNeighbours.length > 0) {
+            possibleMove = {
+               "moveType": "MOVE",
+               "fromNode": elem[0],
+               "toNode": randomElement(mahNeighbours),
+               "comment": randomElement(quotes)
+            };
+         }
+
+      })
+      .value();
+
+   return possibleMove || {
+      "moveType": "DONE"
    };
 };
