@@ -21,14 +21,13 @@ public class GameEngineTest {
       MapParser mapParser = new MapParser(new ObjectMapper());
       GameMap gameMap = mapParser.loadFile(new File("mapeditor/uk.json"));
 
-      PlayerInfo p1 = new PlayerInfo("p1", "SimpleBot", null);
-      PlayerInfo p2 = new PlayerInfo("p2", "SimpleBot", null);
-      PlayerInfo p3 = new PlayerInfo("p3", "SimpleBot", null);
-      PlayerInfo p4 = new PlayerInfo("p4", "SimpleBot", null);
-      PlayerInfo p5 = new PlayerInfo("p5", "SimpleBot", null);
-      List<PlayerController> bots = Arrays.asList((PlayerController) new SimpleBot(), new SimpleBot(), new SimpleBot(), new SimpleBot(),
-         new SimpleBot());
-      Game gameState = new Game(gameMap, Arrays.asList(p1, p2, p3, p4, p5), bots);
+      PlayerInfo p1 = new PlayerInfo("p1", SimpleBot.class.getName(), null);
+      PlayerInfo p2 = new PlayerInfo("p2", SimpleBot.class.getName(), null);
+      PlayerInfo p3 = new PlayerInfo("p3", SimpleBot.class.getName(), null);
+      PlayerInfo p4 = new PlayerInfo("p4", SimpleBot.class.getName(), null);
+      PlayerInfo p5 = new PlayerInfo("p5", SimpleBot.class.getName(), null);
+
+      Game gameState = new Game(gameMap, Arrays.asList(p1, p2, p3, p4, p5));
       gameState.setMaxTurns(100);
       Random random = new Random(0x5EED);
       for (Region region : gameMap.regions) {
@@ -48,15 +47,13 @@ public class GameEngineTest {
       int width = 3;
       int height = 3;
       Region[][] nodes = createMatrixGraph(width, height, gameMap);
-      PlayerInfo p1 = new PlayerInfo("p1", "SimpleBot", null);
-      PlayerInfo p2 = new PlayerInfo("p2", "SimpleBot", null);
-      PlayerInfo p3 = new PlayerInfo("p3", "SimpleBot", null);
-      PlayerInfo p4 = new PlayerInfo("p4", "SimpleBot", null);
-      PlayerInfo p5 = new PlayerInfo("p5", "SimpleBot", null);
+      PlayerInfo p1 = new PlayerInfo("p1", SimpleBot.class.getName(), null);
+      PlayerInfo p2 = new PlayerInfo("p2", SimpleBot.class.getName(), null);
+      PlayerInfo p3 = new PlayerInfo("p3", SimpleBot.class.getName(), null);
+      PlayerInfo p4 = new PlayerInfo("p4", SimpleBot.class.getName(), null);
+      PlayerInfo p5 = new PlayerInfo("p5", SimpleBot.class.getName(), null);
 
-      List<PlayerController> bots = Arrays.asList((PlayerController) new SimpleBot(), new SimpleBot(), new SimpleBot(), new SimpleBot(),
-         new SimpleBot());
-      Game gameState = new Game(gameMap, Arrays.asList(p1, p2, p3, p4, p5), bots);
+      Game gameState = new Game(gameMap, Arrays.asList(p1, p2, p3, p4, p5));
 
       gameState.setMaxTurns(100);
 
