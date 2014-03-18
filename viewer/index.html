@@ -37,8 +37,15 @@ canvas {
 <div id="log"></div>
 <button id="load">load</button>
 <script>
-var game;
-$.getJSON("replay.json", function(data) {game=data;render(game)});
+var game;	
+function loadReplay(callback) {
+	$.getJSON("replay.json", function(data) {
+		game=data;
+		render(game)
+		callback();
+	});
+}
+$(loadReplay);
 var selected = null;
 var divs = [];
 
@@ -83,9 +90,19 @@ var sounds = {
 
 
 $("#load").click(function() {
-	//render(JSON.parse($("#output").val()))
 });
 var colors = ["red", "blue", "green", "yellow", "purple"];
+var timer = null;
+var playing = false;
+function onClick() {
+	if (playing) {
+		playing = false;
+		clearTimeout(timer);
+	} else {
+		playing = true;
+		doMove();
+	}
+}
 function render(game) {
 	selected = null;
 	divs = [];
@@ -102,10 +119,7 @@ function render(game) {
 	el.append(img);
 	$(img).load(function() {
 		el.append($('<canvas width="' + $(img).width() + '" height="' + $(img).height() + '"></canvas>'));
-		$("canvas").click(function(e) {
-			nextMove = 0;
-			doMove();
-		});
+		$("canvas").click(onClick);
 		drawNeighbourConnections();
 	});
 	img.src = game.map.src;
@@ -118,12 +132,10 @@ function render(game) {
 	});
 }
 
-var nextMove = 0;
+var nextMove = 15;
 function doMove() {
 	var move = game.moves[nextMove++];
-	console.log(move);
 	if (move.type=="MOVE") {
-		console.log("animating")
 		var temp = createRegionDiv(game.map.regions[move.from]);
 		temp.style.backgroundColor = colors[game.occupants[move.from].player];
 		temp.innerText = game.occupants[move.from].strength;
@@ -145,8 +157,10 @@ function doMove() {
 			divs[move.to].innerText=game.occupants[move.to].strength;
 			log(attacker.name + " attacks and rolls " + move.attackerRoll.join("+") + "="+attackerSum+", " + defender.name + " defends and rolls " + move.defenderRoll.join("+") + "=" + defenderSum);
             if (attackerSum > defenderSum) {
+                if (window.chrome) sounds.win_battle.load();
                 sounds.win_battle.play();
             } else {
+                if (window.chrome) sounds.lose_battle.load();
                 sounds.lose_battle.play();
             }
 
@@ -156,8 +170,9 @@ function doMove() {
 			game.occupants[move.to].player = game.occupants[move.from].player;
 		}
 		setStrengthAtRegion(move.from, 1);
-		setTimeout(function() {
-		}, 1000);
+		if (nextMove < game.moves.length && playing) 
+			timer = setTimeout(doMove, 2000);
+
 	} else if (move.type=="DONE") {
 		var player = game.players[move.player];
 		log(player.name + "'s turn ends.");
@@ -166,21 +181,24 @@ function doMove() {
 		}, 0);
 		log(player.name + "'s turn ends: " + total + " reinforcements received.");
 		var list = [];
-		while (move.reinforcements.reduce(function(sum, reinforcement) {return sum + reinforcement.strength;}, 0)) {
-			move.reinforcements.forEach(function(reinforcement) {
-				if (reinforcement.strength) {
-					reinforcement.strength--;
-					list.push(reinforcement.region);
-				}
-			});
+		for (var i = 1; i < 8; i++) {
+			list.push(move.reinforcements.filter(function(r) {
+				return r.strength >= i
+			}).map(function(r) {
+				return r.region;
+			}));
 		}
+		list = list.filter(function(layer) {
+			return layer.length > 0;
+		});
 
-		reinforce(move.player, list);
+		reinforce(move.player, list, function() {
+			if (nextMove < game.moves.length && playing) 
+				timer = setTimeout(doMove, 2000);
+		});
 	}
-	if (nextMove < game.moves.length) setTimeout(doMove, 2000);
 }
 function setStrengthAtRegion(regionId, strength){
-	console.log(strength + " "+regionId );
 	game.occupants[regionId].strength = strength;
 	
 	var dot = $(divs[regionId]);
@@ -191,10 +209,11 @@ function setStrengthAtRegion(regionId, strength){
 }
 
 
-function reinforce(player, regions) {
-	console.log("reinforce()", regions);
+function reinforce(player, list, callback) {
+	console.log(list);
 	var next = 0;
 	var placeOne = function(regionId) {
+		console.log("placeOne",regionId)
 		game.map.regions[regionId]
 		var pos = $(divs[regionId]).position();
 		var startCss = {
@@ -222,11 +241,22 @@ function reinforce(player, regions) {
 			temp.remove();
 			setStrengthAtRegion(regionId,game.occupants[regionId].strength + 1);
 			divs[regionId].innerText=game.occupants[regionId].strength;
-            sounds.reinforcement.play();
-			if (next < regions.length) placeOne(regions[next++]);
 		});
 	}
-	if (next < regions.length) placeOne(regions[next++]);
+
+	var placeLayer = function(regionIds) {
+		regionIds.forEach(placeOne);
+		setTimeout(function() {
+            if (window.chrome) sounds.reinforcement.load();
+            sounds.reinforcement.play();
+			if (next < list.length) 
+				placeLayer(list[next++]);
+			else
+				callback();
+		}, 500);
+	}
+
+	placeLayer(list[next++]);
 }
 
 function createRegionDiv(region) {
