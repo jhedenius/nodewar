@@ -1,10 +1,10 @@
 #Backlog#
 
 * http wrapper for java bot
-* (JH) main method
+* (JH) main method - DONE
 * test http bot client
 * max 8 per region
-* (JH) fair setup
+* (JH) fair setup - DONE
 * automatic game replay output
 * toma's graphics
 
