@@ -1,7 +1,67 @@
 package com.videoplaza.nodewar.mechanics;
 
-/**
- * Created by joachim on 18/03/14.
- */
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.videoplaza.nodewar.json.Game;
+import com.videoplaza.nodewar.json.GameMap;
+import com.videoplaza.nodewar.json.Region;
+import com.videoplaza.nodewar.state.MapParser;
+import com.videoplaza.nodewar.state.PlayerInfo;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 public class Main {
+
+   public static void main(String[] args) throws Exception {
+      MapParser mapParser = new MapParser(new ObjectMapper());
+      GameMap gameMap = null;
+
+      try {
+         gameMap = mapParser.loadFile(new File(args.length > 0 ? args[0] : "mapeditor/uk.json"));
+      } catch (IOException e) {
+         e.printStackTrace();
+         System.exit(0);
+      }
+
+      List<PlayerInfo> players = parseFile(args.length > 1 ? args[1] : "game_config.csv");
+
+      Game gameState = new Game(gameMap, players);
+      gameState.setMaxTurns(100);
+      Random random = new Random(0x5EED);
+      for (Region region : gameMap.regions) {
+         gameState.occupants.get(region.id).player = random.nextInt(players.size());
+         gameState.occupants.get(region.id).strength = random.nextInt(6)+1;
+      }
+      String initial = gameState.toJson();
+      new GameEngine(gameState, 0).startGame();
+      System.out.println("Initial state was: " + initial);
+   }
+
+   private static List<PlayerInfo> parseFile(String filePath) throws IOException {
+      List<PlayerInfo> players = new ArrayList<>();
+
+      File file = new File(filePath);
+      BufferedReader reader = new BufferedReader(new FileReader(file));
+
+      String line = reader.readLine();
+      while(line != null){
+         players.add(parsePlayerInfo(line));
+         line = reader.readLine();
+      }
+
+      return players;
+   }
+
+   private static PlayerInfo parsePlayerInfo(String line) {
+      String[] elements = line.split(",");
+      return new PlayerInfo(elements[0], elements[1], elements.length > 2 ? elements[2]: null);
+   }
+
 }

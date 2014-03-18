@@ -10,6 +10,7 @@ public class PlayerInfo {
    public Game game;
    public int id;
    public String name;
+
    public String implementation;
    public String argument;
 
@@ -35,6 +36,10 @@ public class PlayerInfo {
 
    public String toString() {
       return getName();
+   }
+
+   public String getImplementation() {
+      return implementation;
    }
 
 }

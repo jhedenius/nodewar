@@ -4,7 +4,7 @@
 * (JH) main method
 * test http bot client
 * max 8 per region
-* fair setup
+* (JH) fair setup
 * automatic game replay output
 * toma's graphics
 

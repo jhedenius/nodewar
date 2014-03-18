@@ -18,8 +18,17 @@ import java.util.List;
 import java.util.Map;
 
 public class Game {
+
+
    public Game() {}
-   public Game(GameMap map, List<PlayerInfo> players, List<PlayerController> controllers) {
+
+   public Game(GameMap map, List<PlayerInfo> players) throws Exception {
+
+      List<PlayerController> controllers = new ArrayList<>();
+      for(PlayerInfo player:players){
+         controllers.add((PlayerController) Class.forName(player.getImplementation()).newInstance());
+      }
+
       this.map = map;
       this.players = players;
       for (int i = 0; i < players.size(); i++) {
