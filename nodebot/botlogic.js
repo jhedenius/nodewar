@@ -20,7 +20,7 @@ exports.process = function(request) {
    var possibleMove = null;
 
    // just pick my strongest region with enemy neighbours
-   var mahRegionsYo = _.chain(gameState.myRegions())
+   _.chain(gameState.myRegions())
       .sortBy(function(elem) { return elem[1].strength; })
       .each(function(elem) {
          // get its neighbours that are enemies
