@@ -3,18 +3,18 @@
 * http wrapper for java bot
 * (JH) main method - DONE
 * test http bot client
-* max 8 per region
+* (TS) max 8 per region
 * (JH) fair setup - DONE
-* automatic game replay output
+* (JB) automatic game replay output -DONE
 * toma's graphics
 
 * replay analysis
 * (AA) combine scores
 * tweak visuals
-* more maps
-* many reinforcements: game continues before animations done
+* (TD) more maps
+* (JB) many reinforcements: game continues before animations done -DONE
 * changable timings/speed slider
-* pause function
+* (JB) pause function -DONE
 * show comments
 * test office network
 * documentation
