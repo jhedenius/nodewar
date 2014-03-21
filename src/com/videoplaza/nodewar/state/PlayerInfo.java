@@ -12,6 +12,8 @@ public class PlayerInfo {
    public String name;
    public String implementation;
    public String argument;
+   public Integer score = 0;
+   public Integer defeatedOnTurn = 0;
 
    public PlayerInfo(String name, String implementation, String argument) {
       this.name = name;
@@ -29,6 +31,10 @@ public class PlayerInfo {
 
    public String getName() {
       return game.players.get(id).name;
+   }
+
+   public boolean isDefeated() {
+      return defeatedOnTurn > 0;
    }
 
    public String toString() {

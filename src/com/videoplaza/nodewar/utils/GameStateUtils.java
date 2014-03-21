@@ -115,7 +115,20 @@ public class GameStateUtils {
       return playerScores.first();
    }
 
-   private static Score getScore(PlayerInfo player, Game gameState) {
+   public static void assignScores(List<PlayerInfo> players) {
+      int previousScore = 1;
+      int nextScore = 1;
+      int temp;
+      for (PlayerInfo player: players) {
+         player.score = nextScore;
+
+         temp = previousScore + nextScore;
+         previousScore = nextScore;
+         nextScore = temp;
+      }
+   }
+
+   public static Score getScore(PlayerInfo player, Game gameState) {
       Set<Node> nodes = getPlayerNodes(player, gameState);
       int strength = 0;
       for (Node node : nodes) {
@@ -123,4 +136,10 @@ public class GameStateUtils {
       }
       return new Score(nodes.size(), strength, player);
    }
+
+   private static int fib(int n) {
+      if (n <= 1) return n;
+      else return fib(n-1) + fib(n-2);
+   }
+
 }

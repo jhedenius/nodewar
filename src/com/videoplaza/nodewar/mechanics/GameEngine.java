@@ -6,6 +6,9 @@ import com.videoplaza.nodewar.state.PlayerInfo;
 import com.videoplaza.nodewar.utils.GameStateUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -25,7 +28,12 @@ public class GameEngine {
          doTurn();
          gameState.setCurrentTurn(gameState.getCurrentTurn() + 1);
       }
-      say("Game over. Winner is " + getWinner().getName(), null);
+
+      determineOrderOfSurvivingPlayers();
+
+      GameStateUtils.assignScores(gameState.getPlayers());
+
+      say("Game over. Scores are: " + getScoreString(), null);
    }
 
    private PlayerInfo getWinner() {
@@ -41,8 +49,10 @@ public class GameEngine {
 
    private void doTurn() {
       for (PlayerInfo player : gameState.getPlayers()) {
-         if(canMove(player))
+         if(canMove(player)) {
+            player.defeatedOnTurn = gameState.currentTurn;
             continue;
+         }
          gameState.setCurrentPlayer(player);
          System.out.println(gameState.toJson());
          Move playerMove = player.getPlayerImplementation().getNextMove(gameState);
@@ -174,5 +184,33 @@ public class GameEngine {
          }
       }
       return false;
+   }
+
+   private void determineOrderOfSurvivingPlayers() {
+      Collections.sort(gameState.getPlayers(), new Comparator<PlayerInfo>() {
+         @Override
+         public int compare(PlayerInfo o1, PlayerInfo o2) {
+            return GameStateUtils.getScore(o1, gameState).getStrength() - GameStateUtils.getScore(o2, gameState).getStrength();
+         }
+      });
+
+      for (PlayerInfo player: gameState.getPlayers()) {
+         if (player.defeatedOnTurn == 0) {
+            player.defeatedOnTurn = gameState.currentTurn;
+            gameState.currentTurn += 1;
+         }
+      }
+   }
+
+   private String getScoreString() {
+      List<PlayerInfo> descendingScoreList = new ArrayList<>(gameState.getPlayers());
+      Collections.reverse(descendingScoreList);
+
+      StringBuilder sb = new StringBuilder();
+      for (PlayerInfo player: descendingScoreList) {
+         sb.append(player.getName()).append(": ").append(player.score).append(", ");
+      }
+
+      return sb.toString();
    }
 }
