@@ -35,7 +35,7 @@ canvas {
 <div style="font-size:large" id="attacker"></div>
 <div style="font-size:large" id="defender"></div>
 <div id="log"></div>
-<button id="load">load</button>
+<input type="text" id="delay" name="delay" value="500">
 <script>
 var game;	
 function loadReplay(callback) {
@@ -45,9 +45,18 @@ function loadReplay(callback) {
 		callback();
 	});
 }
-$(loadReplay);
+var baseDelay = 500;
+function setBaseDelay() {
+    baseDelay = $("#delay").val();
+}
+$(function() {
+    loadReplay(function() {});
+    setBaseDelay();
+    $("#delay").on("change", setBaseDelay);
+});
 var selected = null;
 var divs = [];
+var playerDots = [];
 
 /*
 var game = {
@@ -91,7 +100,7 @@ var sounds = {
 
 $("#load").click(function() {
 });
-var colors = ["red", "blue", "green", "yellow", "purple"];
+var colors = ["red", "blue", "green", "gray", "purple"];
 var timer = null;
 var playing = false;
 function onClick() {
@@ -120,8 +129,9 @@ function render(game) {
 	$(img).load(function() {
 		el.append($('<canvas width="' + $(img).width() + '" height="' + $(img).height() + '"></canvas>'));
 		$("canvas").click(onClick);
-		drawNeighbourConnections();
-	});
+        var playersX = $(img).width()+30;
+        showPlayers(playersX, el);
+    });
 	img.src = game.map.src;
 
 	game.map.regions.forEach(function(region) {
@@ -139,9 +149,6 @@ function doMove() {
 		var temp = createRegionDiv(game.map.regions[move.from]);
 		temp.style.backgroundColor = colors[game.occupants[move.from].player];
 		temp.innerText = game.occupants[move.from].strength;
-		divs[move.from].innerText = "?";
-		divs[move.to].innerText="?";
-		divs[move.to].style.backgroundColor="black";
 		$("#regions").append(temp);
 
 		var attacker = game.players[game.occupants[move.from].player];
@@ -149,7 +156,7 @@ function doMove() {
 		var attackerSum = move.attackerRoll.reduce(function(a,b) {return a+b;});
 		var defenderSum = move.defenderRoll.reduce(function(a,b) {return a+b;});
 
-		$(temp).animate($(divs[move.to]).position(), 1000, function() {
+		$(temp).animate($(divs[move.to]).position(), 2*baseDelay, function() {
 			temp.remove();
 			divs[move.from].style.backgroundColor=colors[game.occupants[move.from].player];
 			divs[move.from].innerText=game.occupants[move.from].strength;
@@ -171,7 +178,7 @@ function doMove() {
 		}
 		setStrengthAtRegion(move.from, 1);
 		if (nextMove < game.moves.length && playing) 
-			timer = setTimeout(doMove, 2000);
+			timer = setTimeout(doMove, 4*baseDelay);
 
 	} else if (move.type=="DONE") {
 		var player = game.players[move.player];
@@ -179,6 +186,7 @@ function doMove() {
 		var total = move.reinforcements.reduce(function(sum, reinforcement) {
 			return sum + reinforcement.strength;
 		}, 0);
+        playerDots[player.id].html(total);
 		log(player.name + "'s turn ends: " + total + " reinforcements received.");
 		var list = [];
 		for (var i = 1; i < 8; i++) {
@@ -194,7 +202,7 @@ function doMove() {
 
 		reinforce(move.player, list, function() {
 			if (nextMove < game.moves.length && playing) 
-				timer = setTimeout(doMove, 2000);
+				timer = setTimeout(doMove, 4*baseDelay);
 		});
 	}
 }
@@ -237,7 +245,7 @@ function reinforce(player, list, callback) {
 		$("#regions").append(temp);
 		pos.width = 30;
 		pos.height= 30;
-		$(temp).animate(endCss, 500, function() {
+		$(temp).animate(endCss, 1*baseDelay, function() {
 			temp.remove();
 			setStrengthAtRegion(regionId,game.occupants[regionId].strength + 1);
 			divs[regionId].innerText=game.occupants[regionId].strength;
@@ -271,20 +279,13 @@ function log(message) {
 	$("#log").append("<p>" + message + "</p>");
 }
 
-function drawNeighbourConnections() {
-/*	var canvas = $("canvas").get(0);
-	var ctx = canvas.getContext("2d");
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.beginPath();
-	map.regions.forEach(function(r) {
-		r.neighbours.forEach(function(nId) {
-			var n = map.regions[nId];
-			if (r.id < n.id) {
-				ctx.moveTo(r.x,r.y);
-				ctx.lineTo(n.x,n.y);
-			}
-		}); 
-	});
-	ctx.stroke();	*/
+function showPlayers(x, el) {
+    game.players.forEach(function(player, i) {
+        var playerDot = createRegionDiv({id:0,x:x,y:30 + 60*player.id});
+        playerDot.style.backgroundColor=colors[player.id];
+        $(playerDot).html('<span></span><div style="position:absolute; left:35px; color:black">' + player.name + '</div>');
+        el.append(playerDot);
+        playerDots.push($("span", playerDot));
+    });
 }
 </script>

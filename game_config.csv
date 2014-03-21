@@ -1,5 +1,6 @@
+Viktor,com.videoplaza.nodewar.bots.RageBot
 Jocke, com.videoplaza.nodewar.bots.SimpleBot
 Jakob, com.videoplaza.nodewar.bots.SimpleBot
 Nisse, com.videoplaza.nodewar.bots.SimpleBot
-Toma, com.videoplaza.nodewar.bots.SimpleBot
-Alex, com.videoplaza.nodewar.bots.SimpleBot
+Toma,  com.videoplaza.nodewar.bots.TomaBot
+Alex,  com.videoplaza.nodewar.bots.SimpleBot
