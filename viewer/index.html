@@ -141,6 +141,10 @@ function render(game) {
 
 var nextMove = 0;
 function doMove() {
+    var next = function() {
+        if (nextMove < game.moves.length && playing)
+            timer = setTimeout(doMove, 4*baseDelay);
+    }
 	var move = game.moves[nextMove++];
 	if (move.type=="MOVE") {
 		var temp = createRegionDiv(game.map.regions[move.from]);
@@ -174,9 +178,7 @@ function doMove() {
 			game.occupants[move.to].player = game.occupants[move.from].player;
 		}
 		setStrengthAtRegion(move.from, 1);
-		if (nextMove < game.moves.length && playing) 
-			timer = setTimeout(doMove, 4*baseDelay);
-
+        next();
 	} else if (move.type=="DONE") {
 		var player = game.players[move.player];
 		log(player.name + "'s turn ends.");
@@ -197,12 +199,10 @@ function doMove() {
 			return layer.length > 0;
 		});
 
-		reinforce(move.player, list, function() {
-			if (nextMove < game.moves.length && playing) 
-				timer = setTimeout(doMove, 4*baseDelay);
-		});
+		reinforce(move.player, list, next);
 	} else if (move.type=="COMMENT") {
         log(move.comment);
+        next();
     }
 }
 function setStrengthAtRegion(regionId, strength){
