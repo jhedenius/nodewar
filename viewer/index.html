@@ -23,10 +23,7 @@ canvas {
 }
 #log {
 	position:absolute;
-	right:20px;
-	top:0;
-	font: normal 14pt 'Open Sans';
-	max-width: 300px
+	font: normal 36px 'Open Sans';
 }
 </style>
 <div style="position:relative;" id="regions">
@@ -204,7 +201,9 @@ function doMove() {
 			if (nextMove < game.moves.length && playing) 
 				timer = setTimeout(doMove, 4*baseDelay);
 		});
-	}
+	} else if (move.type=="COMMENT") {
+        log(move.comment);
+    }
 }
 function setStrengthAtRegion(regionId, strength){
 	game.occupants[regionId].strength = strength;
@@ -276,7 +275,7 @@ function createRegionDiv(region) {
 }
 
 function log(message) {
-	$("#log").append("<p>" + message + "</p>");
+	$("#log").html("<p>" + message + "</p>");
 }
 
 function showPlayers(x, el) {
@@ -287,5 +286,6 @@ function showPlayers(x, el) {
         el.append(playerDot);
         playerDots.push($("span", playerDot));
     });
+    $("#log").css({left:x+30, top: 30 + 60*game.players.length});
 }
 </script>
