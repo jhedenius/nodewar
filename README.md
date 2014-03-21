@@ -18,3 +18,6 @@
 * show comments
 * test office network
 * documentation
+
+##The game we stole##
+http://www.gamedesign.jp/flash/dice/dice.html
