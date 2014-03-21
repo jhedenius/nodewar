@@ -1,7 +1,6 @@
 package com.videoplaza.nodewar.state;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.videoplaza.nodewar.json.GameMap;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,6 +1,9 @@
-package com.videoplaza.nodewar.mechanics;
+package com.videoplaza.nodewar.bots;
 
-import com.videoplaza.nodewar.json.Game;
+import com.videoplaza.nodewar.state.Game;
+import com.videoplaza.nodewar.mechanics.Move;
+import com.videoplaza.nodewar.mechanics.MoveType;
+import com.videoplaza.nodewar.mechanics.PlayerController;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;

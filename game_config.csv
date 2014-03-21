@@ -1,5 +1,5 @@
-Jocke, com.videoplaza.nodewar.mechanics.SimpleBot
-Jakob, com.videoplaza.nodewar.mechanics.HttpBot, http://localhost:8081
-Nisse, com.videoplaza.nodewar.mechanics.SimpleBot
-Toma, com.videoplaza.nodewar.mechanics.SimpleBot
-Alex, com.videoplaza.nodewar.mechanics.SimpleBot
+Jocke, com.videoplaza.nodewar.bots.SimpleBot
+Jakob, com.videoplaza.nodewar.bots.SimpleBot
+Nisse, com.videoplaza.nodewar.bots.SimpleBot
+Toma, com.videoplaza.nodewar.bots.SimpleBot
+Alex, com.videoplaza.nodewar.bots.SimpleBot

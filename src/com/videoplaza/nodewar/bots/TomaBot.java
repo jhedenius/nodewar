@@ -1,6 +1,9 @@
-package com.videoplaza.nodewar.mechanics;
+package com.videoplaza.nodewar.bots;
 
-import com.videoplaza.nodewar.json.Game;
+import com.videoplaza.nodewar.mechanics.Move;
+import com.videoplaza.nodewar.mechanics.MoveType;
+import com.videoplaza.nodewar.mechanics.PlayerController;
+import com.videoplaza.nodewar.state.Game;
 import com.videoplaza.nodewar.state.Node;
 import com.videoplaza.nodewar.state.PlayerInfo;
 import com.videoplaza.nodewar.utils.GameStateUtils;
@@ -10,7 +13,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class SimpleBot implements PlayerController {
+public class TomaBot implements PlayerController {
 
    @Override
    public Move getNextMove(Game gameState) {

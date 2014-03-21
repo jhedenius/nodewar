@@ -1,6 +1,6 @@
 package com.videoplaza.nodewar.mechanics;
 
-import com.videoplaza.nodewar.json.Game;
+import com.videoplaza.nodewar.state.Game;
 import com.videoplaza.nodewar.state.Node;
 import com.videoplaza.nodewar.state.PlayerInfo;
 import com.videoplaza.nodewar.utils.GameStateUtils;

@@ -1,8 +1,5 @@
 package com.videoplaza.nodewar.state;
 
-import com.videoplaza.nodewar.json.Game;
-import com.videoplaza.nodewar.json.Region;
-
 import java.util.HashSet;
 import java.util.Set;
 

@@ -1,22 +1,18 @@
 package com.videoplaza.nodewar;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.videoplaza.nodewar.json.Game;
-import com.videoplaza.nodewar.json.GameMap;
-import com.videoplaza.nodewar.json.Region;
+import com.videoplaza.nodewar.state.Game;
+import com.videoplaza.nodewar.state.GameMap;
 import com.videoplaza.nodewar.mechanics.GameEngine;
 import com.videoplaza.nodewar.state.MapParser;
 import com.videoplaza.nodewar.state.PlayerInfo;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class Main {
 

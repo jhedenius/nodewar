@@ -1,4 +1,4 @@
-package com.videoplaza.nodewar.json;
+package com.videoplaza.nodewar.state;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,19 +7,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.videoplaza.nodewar.mechanics.Move;
 import com.videoplaza.nodewar.mechanics.PlayerController;
-import com.videoplaza.nodewar.state.Node;
-import com.videoplaza.nodewar.state.PlayerInfo;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 public class Game {
 

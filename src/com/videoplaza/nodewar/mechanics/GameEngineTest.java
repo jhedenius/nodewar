@@ -1,9 +1,10 @@
 package com.videoplaza.nodewar.mechanics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.videoplaza.nodewar.json.Game;
-import com.videoplaza.nodewar.json.GameMap;
-import com.videoplaza.nodewar.json.Region;
+import com.videoplaza.nodewar.state.Game;
+import com.videoplaza.nodewar.state.GameMap;
+import com.videoplaza.nodewar.state.Region;
+import com.videoplaza.nodewar.bots.SimpleBot;
 import com.videoplaza.nodewar.state.MapParser;
 import com.videoplaza.nodewar.state.Node;
 import com.videoplaza.nodewar.state.PlayerInfo;
@@ -11,8 +12,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 public class GameEngineTest {
 

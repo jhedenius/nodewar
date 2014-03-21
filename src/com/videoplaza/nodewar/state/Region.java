@@ -1,4 +1,4 @@
-package com.videoplaza.nodewar.json;
+package com.videoplaza.nodewar.state;
 
 import java.util.ArrayList;
 import java.util.List;

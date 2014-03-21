@@ -1,7 +1,6 @@
 package com.videoplaza.nodewar.state;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.videoplaza.nodewar.json.Game;
 import com.videoplaza.nodewar.mechanics.PlayerController;
 
 public class PlayerInfo {

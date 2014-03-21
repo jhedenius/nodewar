@@ -1,6 +1,6 @@
 package com.videoplaza.nodewar.mechanics;
 
-import com.videoplaza.nodewar.json.Game;
+import com.videoplaza.nodewar.state.Game;
 
 public interface PlayerController {
 
