@@ -41,7 +41,7 @@ public class GameEngine {
 
    private void doTurn() {
       for (PlayerInfo player : gameState.getPlayers()) {
-         if(canMove(player))
+         if(!canMove(player))
             continue;
          gameState.setCurrentPlayer(player);
          Move playerMove = player.getPlayerImplementation().getNextMove(gameState);
