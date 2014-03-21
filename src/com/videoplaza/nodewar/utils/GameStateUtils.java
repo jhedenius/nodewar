@@ -39,7 +39,7 @@ public class GameStateUtils {
       List<Node> randomPlayerNodes;
       Map<Node, Integer> reinforcements = new HashMap<>();
       for (int i = 0; i < largestConnectedTerritory; i++) {
-         randomPlayerNodes = getRandomReinforcementNodes(nodes);
+         randomPlayerNodes = getRandomReinforcementNodes(nodes, reinforcements);
          if (randomPlayerNodes.isEmpty()) {
             System.out.println("No nodes to reinforce for player " + player.getName());
             break;
@@ -64,13 +64,14 @@ public class GameStateUtils {
       return result;
    }
 
-   private static List<Node> getRandomReinforcementNodes(Set<Node> nodes) {
+   private static List<Node> getRandomReinforcementNodes(Set<Node> nodes, Map<Node, Integer> reinforcements) {
       List<Node> randomPlayerNodes = new ArrayList<>();
       randomPlayerNodes.addAll(nodes);
 
       Set<Node> toRemove = new HashSet<>();
       for (Node node : randomPlayerNodes) {
-         if (node.getDiceCount() >= MAX_DICES) {
+         int reinforcement = reinforcements.containsKey(node) ? reinforcements.get(node) : 0;
+         if (node.getDiceCount() + reinforcement >= MAX_DICES) {
             toRemove.add(node);
          }
       }
