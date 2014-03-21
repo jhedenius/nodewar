@@ -35,7 +35,7 @@ canvas {
 <div style="font-size:large" id="attacker"></div>
 <div style="font-size:large" id="defender"></div>
 <div id="log"></div>
-<button id="load">load</button>
+<input type="text" id="delay" name="delay" value="500">
 <script>
 var game;	
 function loadReplay(callback) {
@@ -45,9 +45,18 @@ function loadReplay(callback) {
 		callback();
 	});
 }
-$(loadReplay);
+var baseDelay = 500;
+function setBaseDelay() {
+    baseDelay = $("#delay").val();
+}
+$(function() {
+    loadReplay();
+    setBaseDelay();
+    $("#delay").on("change", setBaseDelay);
+});
 var selected = null;
 var divs = [];
+
 
 /*
 var game = {
@@ -149,7 +158,7 @@ function doMove() {
 		var attackerSum = move.attackerRoll.reduce(function(a,b) {return a+b;});
 		var defenderSum = move.defenderRoll.reduce(function(a,b) {return a+b;});
 
-		$(temp).animate($(divs[move.to]).position(), 1000, function() {
+		$(temp).animate($(divs[move.to]).position(), 2*baseDelay, function() {
 			temp.remove();
 			divs[move.from].style.backgroundColor=colors[game.occupants[move.from].player];
 			divs[move.from].innerText=game.occupants[move.from].strength;
@@ -171,7 +180,7 @@ function doMove() {
 		}
 		setStrengthAtRegion(move.from, 1);
 		if (nextMove < game.moves.length && playing) 
-			timer = setTimeout(doMove, 2000);
+			timer = setTimeout(doMove, 4*baseDelay);
 
 	} else if (move.type=="DONE") {
 		var player = game.players[move.player];
@@ -194,7 +203,7 @@ function doMove() {
 
 		reinforce(move.player, list, function() {
 			if (nextMove < game.moves.length && playing) 
-				timer = setTimeout(doMove, 2000);
+				timer = setTimeout(doMove, 4*baseDelay);
 		});
 	}
 }
@@ -237,7 +246,7 @@ function reinforce(player, list, callback) {
 		$("#regions").append(temp);
 		pos.width = 30;
 		pos.height= 30;
-		$(temp).animate(endCss, 500, function() {
+		$(temp).animate(endCss, 1*baseDelay, function() {
 			temp.remove();
 			setStrengthAtRegion(regionId,game.occupants[regionId].strength + 1);
 			divs[regionId].innerText=game.occupants[regionId].strength;
