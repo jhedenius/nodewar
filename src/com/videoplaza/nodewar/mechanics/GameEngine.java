@@ -53,16 +53,13 @@ public class GameEngine {
          }
          playerMove.setReinforcements(GameStateUtils.reinforce(player, gameState, random));
          gameState.apply(playerMove);
-
+         say(playerMove.getComment(), player);
       }
    }
 
    private void applyMove(PlayerInfo player, Move move) {
       if (!validMove(player, move))
          return;
-
-      say(move.getComment(), player);
-
 
       move.setAttackerRoll(rollDice(move.getFromNode().getDiceCount()));
       move.setDefenderRoll(rollDice(move.getToNode().getDiceCount()));
@@ -83,15 +80,20 @@ public class GameEngine {
       move.getToNode().setDiceCount(diceCountFrom - 1);
       move.getToNode().setOccupier(move.getFromNode().getOccupier());
       move.getFromNode().setDiceCount(1);
-      say("PlayerController " + move.getFromNode().getOccupier().getName() + " occupies " + move.getToNode().getName(), null);
+      //say("PlayerController " + move.getFromNode().getOccupier().getName() + " occupies " + move.getToNode().getName(), null);
    }
 
    private void applyLoss(Move move) {
       move.getFromNode().setDiceCount(1);
-      say("PlayerController " + move.getFromNode().getOccupier().getName() + " failed to occupy " + move.getToNode().getName(), null);
+      //say("PlayerController " + move.getFromNode().getOccupier().getName() + " failed to occupy " + move.getToNode().getName(), null);
    }
 
    private void say(String message, PlayerInfo playerInfo) {
+      if(message == null || message.length() == 0)
+         return;
+
+      gameState.apply(new Move(null, null, playerInfo == null ? message : playerInfo + ": " + message, MoveType.COMMENT));
+
       try {
          //Thread.sleep(500);
       } catch (Exception e) {
