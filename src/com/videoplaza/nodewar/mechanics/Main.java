@@ -36,12 +36,18 @@ public class Main {
       gameState.setMaxTurns(100);
       gameState.distributeInitialRegionOccupants(System.currentTimeMillis());
 
-      String initial = gameState.toJson();
+
+      Game initial = Game.fromJson(gameState.toJson());
       new GameEngine(gameState, 0).startGame();
-      System.out.println("Initial state was: " + initial);
+      gameState.occupants = initial.occupants;
+
+      System.out.println("Initial state was: " + initial.toJson());
+
+      gameState.toJson(new File("viewer/replay.json"));
+      System.out.println("Tournament done, replay written to viewer/replay.json");
    }
 
-   private static List<PlayerInfo> parseFile(String filePath) throws IOException {
+    private static List<PlayerInfo> parseFile(String filePath) throws IOException {
       List<PlayerInfo> players = new ArrayList<>();
 
       File file = new File(filePath);
