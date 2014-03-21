@@ -38,7 +38,7 @@ public class TomaBot implements PlayerController {
          Collections.sort(adjacentNodes, new Comparator<Node>() {
             @Override
             public int compare(Node o1, Node o2) {
-               return Integer.compare(o1.getDiceCount(), o2.getDiceCount());
+               return Integer.compare(o2.getDiceCount(), o1.getDiceCount());
             }
          });
 
