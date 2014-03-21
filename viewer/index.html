@@ -5,7 +5,7 @@
 	position:absolute;
 	width:30px;
 	height:30px;
-	background-color:gray;
+	background-color:black;
 	border-radius:15px;
 	text-align:center;
 	font:bold 20px "Open Sans";
@@ -20,6 +20,31 @@ canvas {
 	position:absolute;
 	top:0; left:0;
 	z-index: 1
+}
+.reinforcement {
+    width:100;
+    height:100;
+    border-radius:50;
+    font-size: 95px;
+    line-height: 95px;
+}
+.player0 {
+    background-color: red;
+}
+.player1 {
+    background-color: blue;
+}
+.player2 {
+    background-color:green;
+}
+.player3 {
+    background-color: gray;
+}
+.player4 {
+    background-color: purple;
+}
+.player5 {
+    background-color: olive;
 }
 #log {
 	position:absolute;
@@ -98,6 +123,7 @@ var sounds = {
 $("#load").click(function() {
 });
 var colors = ["red", "blue", "green", "gray", "purple"];
+var classes = ["player0", "player1", "player2", "player3", "player4", "player5"];
 var timer = null;
 var playing = false;
 function onClick() {
@@ -133,7 +159,7 @@ function render(game) {
 
 	game.map.regions.forEach(function(region) {
 		if (game.occupants[region.id]) {
-			divs[region.id].style.backgroundColor=colors[game.occupants[region.id].player];
+            setOwnerOfDot(divs[region.id], game.occupants[region.id].player);
 			divs[region.id].innerText=game.occupants[region.id].strength;
 		}
 	});
@@ -148,7 +174,7 @@ function doMove() {
 	var move = game.moves[nextMove++];
 	if (move.type=="MOVE") {
 		var temp = createRegionDiv(game.map.regions[move.from]);
-		temp.style.backgroundColor = colors[game.occupants[move.from].player];
+		setOwnerOfDot(temp, game.occupants[move.from].player);
 		temp.innerText = game.occupants[move.from].strength;
 		$("#regions").append(temp);
 
@@ -159,9 +185,9 @@ function doMove() {
 
 		$(temp).animate($(divs[move.to]).position(), 2*baseDelay, function() {
 			temp.remove();
-			divs[move.from].style.backgroundColor=colors[game.occupants[move.from].player];
+			setOwnerOfDot(divs[move.from], game.occupants[move.from].player);
 			divs[move.from].innerText=game.occupants[move.from].strength;
-			divs[move.to].style.backgroundColor=colors[game.occupants[move.to].player];
+            setOwnerOfDot(divs[move.to], game.occupants[move.to].player);
 			divs[move.to].innerText=game.occupants[move.to].strength;
 			log(attacker.name + " attacks and rolls " + move.attackerRoll.join("+") + "="+attackerSum+", " + defender.name + " defends and rolls " + move.defenderRoll.join("+") + "=" + defenderSum);
             if (attackerSum > defenderSum) {
@@ -223,23 +249,10 @@ function reinforce(player, list, callback) {
 		console.log("placeOne",regionId)
 		game.map.regions[regionId]
 		var pos = $(divs[regionId]).position();
-		var startCss = {
-			width:100,
-			height:100,
-			"border-radius":50,
-			"font-size": "95px",
-			"line-height": "95px"
-		}
 		var endCss = $(divs[regionId]).css(["left","top","width","height","border-radius","font-size","line-height"]);
 		var temp = createRegionDiv({id:0,x:pos.left,y:pos.top-300});
-		$(temp).css({
-			"background-color":colors[player],
-			width:100,
-			height:100,
-			"border-radius":50,
-			"font-size": "95px",
-			"line-height": "95px"
-		});
+		$(temp).addClass("reinforcement");
+        setOwnerOfDot(temp, game.occupants[regionId].player);
 		temp.innerText = "1";
 		$("#regions").append(temp);
 		pos.width = 30;
@@ -281,11 +294,16 @@ function log(message) {
 function showPlayers(x, el) {
     game.players.forEach(function(player, i) {
         var playerDot = createRegionDiv({id:0,x:x,y:30 + 60*player.id});
-        playerDot.style.backgroundColor=colors[player.id];
+        setOwnerOfDot(playerDot, player.id);
         $(playerDot).html('<span></span><div style="position:absolute; left:35px; color:black">' + player.name + '</div>');
         el.append(playerDot);
         playerDots.push($("span", playerDot));
     });
     $("#log").css({left:x+30, top: 30 + 60*game.players.length});
+}
+
+function setOwnerOfDot(el, playerId) {
+    $(el).removeClass(classes.join(" "));
+    $(el).addClass(classes[playerId]);
 }
 </script>
