@@ -1,9 +1,10 @@
-package com.videoplaza.nodewar.mechanics;
+package com.videoplaza.nodewar;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.videoplaza.nodewar.json.Game;
 import com.videoplaza.nodewar.json.GameMap;
 import com.videoplaza.nodewar.json.Region;
+import com.videoplaza.nodewar.mechanics.GameEngine;
 import com.videoplaza.nodewar.state.MapParser;
 import com.videoplaza.nodewar.state.PlayerInfo;
 
