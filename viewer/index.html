@@ -56,7 +56,7 @@ $(function() {
 });
 var selected = null;
 var divs = [];
-
+var playerDots = [];
 
 /*
 var game = {
@@ -100,7 +100,7 @@ var sounds = {
 
 $("#load").click(function() {
 });
-var colors = ["red", "blue", "green", "yellow", "purple"];
+var colors = ["red", "blue", "green", "gray", "purple"];
 var timer = null;
 var playing = false;
 function onClick() {
@@ -149,9 +149,6 @@ function doMove() {
 		var temp = createRegionDiv(game.map.regions[move.from]);
 		temp.style.backgroundColor = colors[game.occupants[move.from].player];
 		temp.innerText = game.occupants[move.from].strength;
-		divs[move.from].innerText = "?";
-		divs[move.to].innerText="?";
-		divs[move.to].style.backgroundColor="black";
 		$("#regions").append(temp);
 
 		var attacker = game.players[game.occupants[move.from].player];
@@ -189,6 +186,7 @@ function doMove() {
 		var total = move.reinforcements.reduce(function(sum, reinforcement) {
 			return sum + reinforcement.strength;
 		}, 0);
+        playerDots[player.id].html(total);
 		log(player.name + "'s turn ends: " + total + " reinforcements received.");
 		var list = [];
 		for (var i = 1; i < 8; i++) {
@@ -285,8 +283,9 @@ function showPlayers(x, el) {
     game.players.forEach(function(player, i) {
         var playerDot = createRegionDiv({id:0,x:x,y:30 + 60*player.id});
         playerDot.style.backgroundColor=colors[player.id];
-        $(playerDot).html('<div style="position:absolute; left:35px; color:black">' + player.name + '</div>');
+        $(playerDot).html('<span></span><div style="position:absolute; left:35px; color:black">' + player.name + '</div>');
         el.append(playerDot);
+        playerDots.push($("span", playerDot));
     });
 }
 </script>
