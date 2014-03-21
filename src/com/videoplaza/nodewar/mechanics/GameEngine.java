@@ -45,7 +45,8 @@ public class GameEngine {
             continue;
          gameState.setCurrentPlayer(player);
          Move playerMove = player.getPlayerImplementation().getNextMove(gameState);
-         while (playerMove != null && playerMove.getMoveType() != MoveType.DONE) {
+         int i = 0;
+         while (playerMove != null && playerMove.getMoveType() != MoveType.DONE && i++<1000) {
             gameState.apply(playerMove);
             applyMove(player, playerMove);
             playerMove = player.getPlayerImplementation().getNextMove(gameState);
