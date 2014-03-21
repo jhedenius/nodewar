@@ -50,7 +50,7 @@ function setBaseDelay() {
     baseDelay = $("#delay").val();
 }
 $(function() {
-    loadReplay();
+    loadReplay(function() {});
     setBaseDelay();
     $("#delay").on("change", setBaseDelay);
 });
@@ -129,8 +129,9 @@ function render(game) {
 	$(img).load(function() {
 		el.append($('<canvas width="' + $(img).width() + '" height="' + $(img).height() + '"></canvas>'));
 		$("canvas").click(onClick);
-		drawNeighbourConnections();
-	});
+        var playersX = $(img).width()+30;
+        showPlayers(playersX, el);
+    });
 	img.src = game.map.src;
 
 	game.map.regions.forEach(function(region) {
@@ -280,20 +281,12 @@ function log(message) {
 	$("#log").append("<p>" + message + "</p>");
 }
 
-function drawNeighbourConnections() {
-/*	var canvas = $("canvas").get(0);
-	var ctx = canvas.getContext("2d");
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.beginPath();
-	map.regions.forEach(function(r) {
-		r.neighbours.forEach(function(nId) {
-			var n = map.regions[nId];
-			if (r.id < n.id) {
-				ctx.moveTo(r.x,r.y);
-				ctx.lineTo(n.x,n.y);
-			}
-		}); 
-	});
-	ctx.stroke();	*/
+function showPlayers(x, el) {
+    game.players.forEach(function(player, i) {
+        var playerDot = createRegionDiv({id:0,x:x,y:30 + 60*player.id});
+        playerDot.style.backgroundColor=colors[player.id];
+        $(playerDot).html('<div style="position:absolute; left:35px; color:black">' + player.name + '</div>');
+        el.append(playerDot);
+    });
 }
 </script>
