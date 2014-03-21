@@ -13,6 +13,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Tries to attack everything all the time
+ */
 public class RageBot implements PlayerController {
    @Override
    public Move getNextMove(Game gameState) {
