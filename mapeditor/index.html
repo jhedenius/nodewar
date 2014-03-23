@@ -87,27 +87,27 @@ function createRegionClickHandler(div, region) {
 	return function() {
 		if (selected == null) {
 			selected = region;
-			div.style.backgroundColor="red";
-			selected.neighbours.forEach(function(n) {divs[n].style.backgroundColor="blue"});
+			div.style.backgroundColor="#ED1E79";
+			selected.neighbours.forEach(function(n) {divs[n].style.backgroundColor="#007786"});
 		} else {
 			if (selected.id != region.id) {
 				if (selected.neighbours.indexOf(region.id) == -1) {
 					selected.neighbours.push(region.id);
 					region.neighbours.push(selected.id);
-					div.style.backgroundColor="blue"
+					div.style.backgroundColor="#007786"
 					divs[selected.id].innerText=selected.neighbours.length;
 					divs[region.id].innerText=region.neighbours.length;
 				} else {
 					selected.neighbours = selected.neighbours.filter(function(x) {return x != region.id;});
 					region.neighbours = region.neighbours.filter(function(x) {return x != selected.id;});
-					div.style.backgroundColor="gray"
+					div.style.backgroundColor="#9B9B9B"
 					divs[selected.id].innerText=selected.neighbours.length;
 					divs[region.id].innerText=region.neighbours.length;
 				}
 				drawNeighbourConnections();
 			} else {
-				divs[selected.id].style.backgroundColor = "gray";
-				selected.neighbours.forEach(function(n) {divs[n].style.backgroundColor="gray"});
+				divs[selected.id].style.backgroundColor = "#9B9B9B";
+				selected.neighbours.forEach(function(n) {divs[n].style.backgroundColor="#9B9B9B"});
 				selected = null;
 			}
 		}
@@ -119,6 +119,8 @@ function drawNeighbourConnections() {
 	var ctx = canvas.getContext("2d");
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.beginPath();
+    ctx.strokeStyle="#FFBC00";
+    ctx.lineWidth= 2;
 	map.regions.forEach(function(r) {
 		r.neighbours.forEach(function(nId) {
 			var n = map.regions[nId];
