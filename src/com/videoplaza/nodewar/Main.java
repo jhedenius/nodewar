@@ -21,7 +21,7 @@ public class Main {
       GameMap gameMap = null;
 
       try {
-         gameMap = mapParser.loadFile(new File(args.length > 0 ? args[0] : "mapeditor/map1.json"));
+         gameMap = mapParser.loadFile(new File(args.length > 0 ? args[0] : "viewer/map3.json"));
       } catch (IOException e) {
          e.printStackTrace();
          System.exit(0);
