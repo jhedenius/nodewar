@@ -75,7 +75,11 @@ public class Main {
 
       for (MapInfo map : maps) {
          for (int i = 0; i < map.numberOfGames; i++) {
-            ArrayList<PlayerInfo> players = new ArrayList<>(tournament.players);
+            ArrayList<PlayerInfo> players = new ArrayList<>();
+            for (PlayerInfo player : tournament.players) {
+               players.add(new PlayerInfo(player.getName(), player.getImplementation(), player.getArgument()));
+            }
+
             Collections.shuffle(players, random);
 
             tournament.games.add(new Game(loadGameMap("mapeditor/" + map.map), players));

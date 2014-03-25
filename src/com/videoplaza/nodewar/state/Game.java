@@ -154,12 +154,12 @@ public class Game {
       game.map = map;
       game.maxTurns = maxTurns;
       game.moves = moves;
+      game.players = players;
       game.occupants = new HashMap<>();
       for (Map.Entry<Integer, Occupant> entry : occupants.entrySet()) {
          game.occupants.put(entry.getKey(), new Occupant(entry.getValue().player, entry.getValue().strength));
       }
 
-      game.players = players;
       return game;
    }
 

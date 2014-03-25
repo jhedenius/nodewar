@@ -30,7 +30,7 @@ public class PlayerInfo {
    }
 
    public String getName() {
-      return game.players.get(id).name;
+      return name;
    }
 
    public String toString() {

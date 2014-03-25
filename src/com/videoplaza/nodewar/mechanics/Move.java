@@ -76,7 +76,7 @@ public class Move {
       return player;
    }
 
-   public int getFrom() {
+   public Integer getFrom() {
       return from;
    }
 

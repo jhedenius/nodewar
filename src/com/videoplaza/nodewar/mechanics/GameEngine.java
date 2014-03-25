@@ -127,10 +127,14 @@ public class GameEngine {
          Move playerMove = player.getPlayerImplementation().getNextMove(game.copy());
          int i = 0;
          while (playerMove != null && playerMove.getMoveType() != MoveType.DONE && i++ < 1000) {
+            if (!validMove(player, playerMove)) {
+               break;
+            }
             game.apply(playerMove);
             applyMove(player, playerMove);
             playerMove = player.getPlayerImplementation().getNextMove(game.copy());
          }
+         playerMove = new Move(null, null, playerMove != null ? playerMove.getComment() : null, MoveType.DONE);
          playerMove.setReinforcements(GameStateUtils.reinforce(player, game, random));
          game.apply(playerMove);
          say(playerMove.getComment(), player);
@@ -138,10 +142,6 @@ public class GameEngine {
    }
 
    private void applyMove(PlayerInfo player, Move move) {
-      if (!validMove(player, move)) {
-         return;
-      }
-
       move.setAttackerRoll(rollDice(new Node(game, move.getFrom()).getDiceCount()));
       move.setDefenderRoll(rollDice(new Node(game, move.getTo()).getDiceCount()));
       if (winBattle(move)) {
@@ -208,8 +208,9 @@ public class GameEngine {
 
    private boolean validMove(PlayerInfo player, Move move) {
       if (move == null ||
-         move.getFrom() < 0 || move.getFrom() >= game.map.regions.size() ||
-         move.getTo() < 0 || move.getTo() >= game.map.regions.size()) {
+         move.getFrom() == null ||
+         move.getTo() == null) {
+         System.out.println("null move");
          return false;
       }
 
@@ -219,16 +220,19 @@ public class GameEngine {
       // player must own fromNode
       if ((fromNode.getOccupier() == null) ||
          !fromNode.getOccupier().getId().equals(player.getId())) {
+         System.out.println("wrong occupier of from");
          return false;
       }
 
       // player must not own toNode already
       if (toNode.getOccupier() != null && toNode.getOccupier().getId().equals(player.getId())) {
+         System.out.println("wrong occupier of to");
          return false;
       }
 
       // player must have at least two dice on fromNode
       if (fromNode.getDiceCount() < 2) {
+         System.out.println("not enough dice");
          return false;
       }
 
