@@ -24,6 +24,7 @@ public class GameEngine {
       while (!isGameOver()) {
          doTurn();
          gameState.setCurrentTurn(gameState.getCurrentTurn() + 1);
+         say("Turn " + gameState.getCurrentTurn() + " out of " + gameState.getMaxTurns(), null);
       }
       say("Game over. Winner is " + getWinner().getName(), null);
    }
@@ -50,10 +51,11 @@ public class GameEngine {
             gameState.apply(playerMove);
             applyMove(player, playerMove);
             playerMove = player.getPlayerImplementation().getNextMove(gameState);
+            say(playerMove.getComment(), player);
          }
          playerMove.setReinforcements(GameStateUtils.reinforce(player, gameState, random));
          gameState.apply(playerMove);
-         say(playerMove.getComment(), player);
+         //say(playerMove.getComment(), player);
       }
    }
 

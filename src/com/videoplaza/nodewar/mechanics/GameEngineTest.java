@@ -1,6 +1,7 @@
 package com.videoplaza.nodewar.mechanics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.videoplaza.nodewar.bots.HttpBot;
 import com.videoplaza.nodewar.state.Game;
 import com.videoplaza.nodewar.state.GameMap;
 import com.videoplaza.nodewar.state.Region;
@@ -12,6 +13,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 public class GameEngineTest {
 
@@ -25,6 +27,29 @@ public class GameEngineTest {
       PlayerInfo p3 = new PlayerInfo("p3", SimpleBot.class.getName(), null);
       PlayerInfo p4 = new PlayerInfo("p4", SimpleBot.class.getName(), null);
       PlayerInfo p5 = new PlayerInfo("p5", SimpleBot.class.getName(), null);
+
+      Game gameState = new Game(gameMap, Arrays.asList(p1, p2, p3, p4, p5));
+      gameState.setMaxTurns(100);
+
+      gameState.distributeInitialRegionOccupants(1L);
+
+      Game initial = Game.fromJson(gameState.toJson());
+      new GameEngine(gameState, 0).startGame();
+      gameState.occupants = initial.occupants;
+      gameState.toJson(new File("viewer/replay.json"));
+      System.out.println("Tournament done, replay written to viewer/replay.json");
+   }
+
+   @Test
+   public void testGameOnUkMapWithHttpBot() throws Exception {
+      MapParser mapParser = new MapParser(new ObjectMapper());
+      GameMap gameMap = mapParser.loadFile(new File("mapeditor/uk.json"));
+
+      PlayerInfo p1 = new PlayerInfo("p1", SimpleBot.class.getName(), null);
+      PlayerInfo p2 = new PlayerInfo("p2", SimpleBot.class.getName(), null);
+      PlayerInfo p3 = new PlayerInfo("p3", SimpleBot.class.getName(), null);
+      PlayerInfo p4 = new PlayerInfo("p4", SimpleBot.class.getName(), null);
+      PlayerInfo p5 = new PlayerInfo("p5", HttpBot.class.getName(), null);
 
       Game gameState = new Game(gameMap, Arrays.asList(p1, p2, p3, p4, p5));
       gameState.setMaxTurns(100);

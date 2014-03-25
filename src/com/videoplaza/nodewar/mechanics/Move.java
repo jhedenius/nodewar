@@ -20,6 +20,8 @@ public class Move {
    private List<Integer> defenderRoll = null;
    private List<Reinforcement> reinforcements = null;
 
+   public Move() { }
+
    public Move(Node fromNode, Node toNode, String comment, MoveType moveType) {
       this.fromNode = fromNode;
       this.toNode = toNode;
@@ -53,6 +55,21 @@ public class Move {
       this.toNode = toNode;
    }
 
+   public Integer getFrom() {
+      return from;
+   }
+
+   public void setFrom(Integer from) {
+      this.from = from;
+   }
+
+   public Integer getTo() {
+      return to;
+   }
+
+   public void setTo(Integer to) {
+      this.to = to;
+   }
 
    public MoveType getMoveType() {
       return type;

@@ -19,8 +19,9 @@ exports.process = function(request) {
 
    var possibleMove = null;
 
-   // just pick my strongest region with enemy neighbours
+   // just pick my strongest region with enemy neighbours with more than one die
    _.chain(gameState.myRegions())
+      .filter(function(elem) { return elem[1].strength > 1; })
       .sortBy(function(elem) { return elem[1].strength; })
       .each(function(elem) {
          // get its neighbours that are enemies
@@ -32,16 +33,18 @@ exports.process = function(request) {
          if (mahNeighbours.length > 0) {
             possibleMove = {
                "moveType": "MOVE",
-               "fromNode": elem[0],
-               "toNode": randomElement(mahNeighbours),
+               "from": elem[0],
+               "to": randomElement(mahNeighbours),
                "comment": randomElement(quotes)
             };
          }
 
-      })
-      .value();
+      });
+
+   console.log("Sending ", possibleMove);
 
    return possibleMove || {
-      "moveType": "DONE"
+      "moveType": "DONE",
+      "comment": "All in the game yo, all in the game."
    };
 };
