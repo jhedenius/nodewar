@@ -24,9 +24,9 @@ exports.GameState = function(gameState) {
          return _.chain(that.occupants)
             .pairs()
             .filter(function(element, index, list) {
-               console.log("Area:", element[0]);
-               console.log("Player:", element[1].player);
-               console.log("Strength:", element[1].strength);
+               //console.log("Area:", element[0]);
+               //console.log("Player:", element[1].player);
+               //console.log("Strength:", element[1].strength);
 
                return element[1].player === that.currentPlayer;
             })
