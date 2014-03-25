@@ -43,7 +43,7 @@ public class Main {
    }
 
    private static Map<String, Integer> singleGame(int gameNumber, Game game, Random random) throws Exception {
-      game.setMaxTurns(10);
+      game.setMaxTurns(50);
       game.setRandom(random);
       game.distributeInitialRegionOccupants();
 
