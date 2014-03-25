@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,7 +22,7 @@ public class Main {
    private static MapParser mapParser = new MapParser(new ObjectMapper());
 
    public static void main(String[] args) throws Exception {
-      Random random = new SecureRandom();
+      Random random = new Random(0);
       Tournament tournament = parseFile(args.length > 1 ? args[1] : "game_config.csv", random);
 
       Map<String, Integer> totals = new HashMap<String, Integer>();
@@ -48,7 +47,7 @@ public class Main {
       game.distributeInitialRegionOccupants();
 
       Game initial = Game.fromJson(game.toJson());
-      Map<String, Integer> score = new GameEngine(game, 0).runGame();
+      Map<String, Integer> score = new GameEngine(game, random).runGame();
       game.occupants = initial.occupants;
 
       System.out.println("Initial state was: " + initial.toJson());

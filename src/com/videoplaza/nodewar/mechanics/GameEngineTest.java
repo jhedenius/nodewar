@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Random;
 
 public class GameEngineTest {
 
@@ -32,7 +33,7 @@ public class GameEngineTest {
       gameState.distributeInitialRegionOccupants();
 
       Game initial = Game.fromJson(gameState.toJson());
-      new GameEngine(gameState, 0).runGame();
+      new GameEngine(gameState, new Random(0)).runGame();
       gameState.occupants = initial.occupants;
       gameState.toJson(new File("viewer/replay.json"));
       System.out.println("Tournament done, replay written to viewer/replay.json");
@@ -69,7 +70,7 @@ public class GameEngineTest {
 
       //new Thread(new DebugPrint(width, height, nodes,gameState)).start();
 
-      new GameEngine(gameState, 0).runGame();
+      new GameEngine(gameState, new Random(0)).runGame();
 
    }
 

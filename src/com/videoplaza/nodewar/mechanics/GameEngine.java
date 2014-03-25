@@ -19,9 +19,9 @@ public class GameEngine {
    private Game game;
    private final Random random;
 
-   public GameEngine(Game gameState, long randomSeed) {
+   public GameEngine(Game gameState, Random random) {
       this.game = gameState;
-      random = new Random(randomSeed);
+      this.random = random;
    }
 
    public Map<String, Integer> runGame() {
@@ -160,7 +160,7 @@ public class GameEngine {
       Node from = new Node(game, move.getFrom());
       Node to = new Node(game, move.getTo());
       int diceCountFrom = from.getDiceCount();
-      from.setDiceCount(diceCountFrom - 1);
+      to.setDiceCount(diceCountFrom - 1);
       to.setOccupier(from.getOccupier());
       from.setDiceCount(1);
       //say("PlayerController " + move.getFromNode().getOccupier().getName() + " occupies " + move.getToNode().getName(), null);
