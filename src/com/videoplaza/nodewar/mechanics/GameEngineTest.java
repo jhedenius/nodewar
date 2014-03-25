@@ -49,7 +49,7 @@ public class GameEngineTest {
       PlayerInfo p2 = new PlayerInfo("p2", SimpleBot.class.getName(), null);
       PlayerInfo p3 = new PlayerInfo("p3", SimpleBot.class.getName(), null);
       PlayerInfo p4 = new PlayerInfo("p4", SimpleBot.class.getName(), null);
-      PlayerInfo p5 = new PlayerInfo("p5", HttpBot.class.getName(), null);
+      PlayerInfo p5 = new PlayerInfo("p5", HttpBot.class.getName(), "http://localhost:8000/move");
 
       Game gameState = new Game(gameMap, Arrays.asList(p1, p2, p3, p4, p5));
       gameState.setMaxTurns(100);
