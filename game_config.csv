@@ -4,9 +4,7 @@ map3.json, 1
 map5.json, 1
 map6.json, 1
 uk.json, 1
-Viktor,com.videoplaza.nodewar.bots.RageBot
-Jocke, com.videoplaza.nodewar.bots.SimpleBot
 Jakob, com.videoplaza.nodewar.bots.SimpleBot
-Nisse, com.videoplaza.nodewar.bots.SimpleBot
-Toma,  com.videoplaza.nodewar.bots.TomaBot
-Alex,  com.videoplaza.nodewar.bots.SimpleBot
+Thomas,com.videoplaza.nodewar.bots.TomaBot
+Victor,com.videoplaza.nodewar.bots.RageBot
+Pa,    com.videoplaza.nodewar.bots.PaBot
