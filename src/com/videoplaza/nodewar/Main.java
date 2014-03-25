@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +23,9 @@ public class Main {
    private static MapParser mapParser = new MapParser(new ObjectMapper());
 
    public static void main(String[] args) throws Exception {
-      Tournament tournament = parseFile(args.length > 1 ? args[1] : "game_config.csv");
-
       Random random = new SecureRandom();
+      Tournament tournament = parseFile(args.length > 1 ? args[1] : "game_config.csv", random);
+
       Map<String, Integer> totals = new HashMap<String, Integer>();
 
       for (PlayerInfo player : tournament.players) {
@@ -45,7 +46,6 @@ public class Main {
       game.setMaxTurns(10);
       game.setRandom(random);
       game.distributeInitialRegionOccupants();
-      game.shufflePlayers();
 
       Game initial = Game.fromJson(game.toJson());
       Map<String, Integer> score = new GameEngine(game, 0).runGame();
@@ -57,7 +57,7 @@ public class Main {
       return score;
    }
 
-   private static Tournament parseFile(String filePath) throws Exception {
+   private static Tournament parseFile(String filePath, Random random) throws Exception {
       Tournament tournament = new Tournament();
       List<MapInfo> maps = new ArrayList<>();
 
@@ -75,7 +75,10 @@ public class Main {
 
       for (MapInfo map : maps) {
          for (int i = 0; i < map.numberOfGames; i++) {
-            tournament.games.add(new Game(loadGameMap("mapeditor/" + map.map), new ArrayList<PlayerInfo>(tournament.players)));
+            ArrayList<PlayerInfo> players = new ArrayList<>(tournament.players);
+            Collections.shuffle(players, random);
+
+            tournament.games.add(new Game(loadGameMap("mapeditor/" + map.map), players));
          }
       }
 

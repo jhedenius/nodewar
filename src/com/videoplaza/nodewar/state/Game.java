@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,8 +109,13 @@ public class Game {
       }
    }
 
-   private static ObjectMapper getObjectMapper() {
-      ObjectMapper objectMapper = new ObjectMapper();
+   private static ObjectMapper objectMapper = null;
+
+   private synchronized static ObjectMapper getObjectMapper() {
+      if (objectMapper != null) {
+         return objectMapper;
+      }
+      objectMapper = new ObjectMapper();
       objectMapper.setVisibilityChecker(
          objectMapper.getSerializationConfig().getDefaultVisibilityChecker().
             withFieldVisibility(JsonAutoDetect.Visibility.ANY).
@@ -143,6 +147,23 @@ public class Game {
       currentPlayer = player.getId();
    }
 
+   public Game copy() {
+      Game game = new Game();
+      game.currentPlayer = currentPlayer;
+      game.currentTurn = currentTurn;
+      game.map = map;
+      game.maxTurns = maxTurns;
+      game.moves = moves;
+      game.occupants = new HashMap<>();
+      for (Map.Entry<Integer, Occupant> entry : occupants.entrySet()) {
+         game.occupants.put(entry.getKey(), new Occupant(entry.getValue().player, entry.getValue().strength));
+      }
+
+      game.players = players;
+      return game;
+   }
+
+
    public PlayerInfo getCurrentPlayer() {
       return players.get(currentPlayer);
    }
@@ -165,18 +186,7 @@ public class Game {
       }
    }
 
-   public void shufflePlayers() {
-      Collections.shuffle(players, random);
-      for (int i = 0; i < players.size(); i++) {
-         players.get(i).id = i;
-      }
-   }
-
    public void setRandom(Random random) {
       this.random = random;
-   }
-
-   public Random getRandom() {
-      return random;
    }
 }

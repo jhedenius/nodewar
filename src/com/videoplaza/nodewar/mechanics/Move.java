@@ -1,6 +1,5 @@
 package com.videoplaza.nodewar.mechanics;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.videoplaza.nodewar.state.Node;
 
 import java.util.List;
@@ -8,10 +7,6 @@ import java.util.List;
 public class Move {
 
    private MoveType type;
-   @JsonIgnore
-   private Node fromNode;
-   @JsonIgnore
-   private Node toNode;
    private String comment;
    private Integer from;
    private Integer to;
@@ -20,9 +15,9 @@ public class Move {
    private List<Integer> defenderRoll = null;
    private List<Reinforcement> reinforcements = null;
 
+   public Move() {}
+
    public Move(Node fromNode, Node toNode, String comment, MoveType moveType) {
-      this.fromNode = fromNode;
-      this.toNode = toNode;
       this.from = fromNode != null ? fromNode.getId() : null;
       this.to = toNode != null ? toNode.getId() : null;
       this.comment = comment;
@@ -37,23 +32,6 @@ public class Move {
       this.comment = comment;
    }
 
-   public Node getFromNode() {
-      return fromNode;
-   }
-
-   public void setFromNode(Node fromNode) {
-      this.fromNode = fromNode;
-   }
-
-   public Node getToNode() {
-      return toNode;
-   }
-
-   public void setToNode(Node toNode) {
-      this.toNode = toNode;
-   }
-
-
    public MoveType getMoveType() {
       return type;
    }
@@ -63,7 +41,7 @@ public class Move {
    }
 
    public String toString() {
-      return fromNode.getOccupier() + " from " + fromNode.getName() + " to " + toNode.getName();
+      return player + " from " + from + " to " + to;
    }
 
    public List<Integer> getAttackerRoll() {
@@ -96,5 +74,13 @@ public class Move {
 
    public Integer getPlayer() {
       return player;
+   }
+
+   public int getFrom() {
+      return from;
+   }
+
+   public Integer getTo() {
+      return to;
    }
 }
