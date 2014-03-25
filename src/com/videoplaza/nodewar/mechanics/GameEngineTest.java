@@ -29,10 +29,10 @@ public class GameEngineTest {
       Game gameState = new Game(gameMap, Arrays.asList(p1, p2, p3, p4, p5));
       gameState.setMaxTurns(100);
 
-      gameState.distributeInitialRegionOccupants(1L);
+      gameState.distributeInitialRegionOccupants();
 
       Game initial = Game.fromJson(gameState.toJson());
-      new GameEngine(gameState, 0).startGame();
+      new GameEngine(gameState, 0).runGame();
       gameState.occupants = initial.occupants;
       gameState.toJson(new File("viewer/replay.json"));
       System.out.println("Tournament done, replay written to viewer/replay.json");
@@ -69,7 +69,7 @@ public class GameEngineTest {
 
       //new Thread(new DebugPrint(width, height, nodes,gameState)).start();
 
-      new GameEngine(gameState, 0).startGame();
+      new GameEngine(gameState, 0).runGame();
 
    }
 

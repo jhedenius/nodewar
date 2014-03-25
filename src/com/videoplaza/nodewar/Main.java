@@ -1,9 +1,9 @@
 package com.videoplaza.nodewar;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.videoplaza.nodewar.mechanics.GameEngine;
 import com.videoplaza.nodewar.state.Game;
 import com.videoplaza.nodewar.state.GameMap;
-import com.videoplaza.nodewar.mechanics.GameEngine;
 import com.videoplaza.nodewar.state.MapParser;
 import com.videoplaza.nodewar.state.PlayerInfo;
 
@@ -11,57 +11,113 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class Main {
+   private static MapParser mapParser = new MapParser(new ObjectMapper());
 
    public static void main(String[] args) throws Exception {
-      MapParser mapParser = new MapParser(new ObjectMapper());
-      GameMap gameMap = null;
+      Tournament tournament = parseFile(args.length > 1 ? args[1] : "game_config.csv");
 
-      try {
-         gameMap = mapParser.loadFile(new File(args.length > 0 ? args[0] : "viewer/map3.json"));
-      } catch (IOException e) {
-         e.printStackTrace();
-         System.exit(0);
+      Random random = new SecureRandom();
+      Map<String, Integer> totals = new HashMap<String, Integer>();
+
+      for (PlayerInfo player : tournament.players) {
+         totals.put(player.name, 0);
       }
 
-      List<PlayerInfo> players = parseFile(args.length > 1 ? args[1] : "game_config.csv");
+      for (int i = 0; i < tournament.games.size(); i++) {
+         Map<String, Integer> score = singleGame(i, tournament.games.get(i), random);
+         for (String playerName : score.keySet()) {
+            totals.put(playerName, totals.get(playerName) + score.get(playerName));
+         }
+      }
 
-      Game gameState = new Game(gameMap, players);
-      gameState.setMaxTurns(100);
-      gameState.distributeInitialRegionOccupants(System.currentTimeMillis());
-
-
-      Game initial = Game.fromJson(gameState.toJson());
-      new GameEngine(gameState, 0).startGame();
-      gameState.occupants = initial.occupants;
-
-      System.out.println("Initial state was: " + initial.toJson());
-
-      gameState.toJson(new File("viewer/replay.json"));
-      System.out.println("Tournament done, replay written to viewer/replay.json");
+      System.out.println("Tournament ended. Final results: " + GameEngine.formatScoresText(totals));
    }
 
-    private static List<PlayerInfo> parseFile(String filePath) throws IOException {
-      List<PlayerInfo> players = new ArrayList<>();
+   private static Map<String, Integer> singleGame(int gameNumber, Game game, Random random) throws Exception {
+      game.setMaxTurns(10);
+      game.setRandom(random);
+      game.distributeInitialRegionOccupants();
+      game.shufflePlayers();
+
+      Game initial = Game.fromJson(game.toJson());
+      Map<String, Integer> score = new GameEngine(game, 0).runGame();
+      game.occupants = initial.occupants;
+
+      System.out.println("Initial state was: " + initial.toJson());
+      game.toJson(new File("viewer/replay" + gameNumber + ".json"));
+      System.out.println("Tournament done, replay written to viewer/replay" + gameNumber + ".json");
+      return score;
+   }
+
+   private static Tournament parseFile(String filePath) throws Exception {
+      Tournament tournament = new Tournament();
+      List<MapInfo> maps = new ArrayList<>();
 
       File file = new File(filePath);
       BufferedReader reader = new BufferedReader(new FileReader(file));
 
-      String line = reader.readLine();
-      while(line != null){
-         players.add(parsePlayerInfo(line));
-         line = reader.readLine();
+      for (String line; (line = reader.readLine()) != null; ) {
+         String[] split = line.split(",");
+         if (isInteger(split[1].trim())) {
+            maps.add(parseMapInfo(line));
+         } else {
+            tournament.players.add(parsePlayerInfo(line));
+         }
       }
 
-      return players;
+      for (MapInfo map : maps) {
+         for (int i = 0; i < map.numberOfGames; i++) {
+            tournament.games.add(new Game(loadGameMap("mapeditor/" + map.map), new ArrayList<PlayerInfo>(tournament.players)));
+         }
+      }
+
+      return tournament;
+   }
+
+   private static MapInfo parseMapInfo(String line) {
+      String[] elements = line.split(",");
+      return new MapInfo(elements[0].trim(), Integer.parseInt(elements[1].trim()));
+   }
+
+   private static boolean isInteger(String s) {
+      try {
+         Integer.parseInt(s);
+         return true;
+      } catch (NumberFormatException e) {
+         return false;
+      }
+   }
+
+   private static GameMap loadGameMap(String name) throws IOException {
+      return mapParser.loadFile(new File(name));
    }
 
    private static PlayerInfo parsePlayerInfo(String line) {
       String[] elements = line.split(",");
-      return new PlayerInfo(elements[0].trim(), elements[1].trim(), elements.length > 2 ? elements[2].trim(): null);
+      return new PlayerInfo(elements[0].trim(), elements[1].trim(), elements.length > 2 ? elements[2].trim() : null);
    }
 
+   private static class Tournament {
+
+      List<Game> games = new ArrayList<Game>();
+      List<PlayerInfo> players = new ArrayList<PlayerInfo>();
+   }
+
+   private static class MapInfo {
+      String map;
+      Integer numberOfGames;
+
+      private MapInfo(String map, Integer numberOfGames) {
+         this.map = map;
+         this.numberOfGames = numberOfGames;
+      }
+   }
 }

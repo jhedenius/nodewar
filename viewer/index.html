@@ -61,14 +61,17 @@ canvas {
 <div style="font-size:large" id="defender"></div>
 <div id="log"></div>
 <input type="text" id="delay" name="delay" value="500">
+<input type="checkbox" id="sound" checked value="1"><label for="sound">Sounds</label>
 <script>
 var game;	
 function loadReplay(callback) {
-	$.getJSON("replay.json", function(data) {
+	$.getJSON(location.search.substring(1), function(data, err) {
 		game=data;
 		render(game)
 		callback();
-	});
+	}).fail(function() {
+        location.search = "?replay0.json";
+    });
 }
 var baseDelay = 500;
 function setBaseDelay() {
@@ -121,6 +124,13 @@ var sounds = {
     reinforcement:new Audio("sound/bonk.mp3")
 }
 
+function playSound(sound) {
+    if (document.getElementById("sound").checked) {
+        if (window.chrome) sound.load();
+        sound.play();
+    }
+}
+
 
 
 $("#load").click(function() {
@@ -167,7 +177,8 @@ function render(game) {
 		}
 	});
 }
-
+var currentTurn = 1;
+var previousPlayer = -1;
 var nextMove = 0;
 function doMove() {
     var next = function() {
@@ -192,13 +203,12 @@ function doMove() {
 			divs[move.from].innerText=game.occupants[move.from].strength;
             setOwnerOfDot(divs[move.to], game.occupants[move.to].player);
 			divs[move.to].innerText=game.occupants[move.to].strength;
-			log(attacker.name + " attacks and rolls " + move.attackerRoll.join("+") + "="+attackerSum+", " + defender.name + " defends and rolls " + move.defenderRoll.join("+") + "=" + defenderSum);
+			log(attacker.name + " attacks and rolls " + move.attackerRoll.join("+") + "="+attackerSum+", " + defender.name + " defends and rolls "
+            + move.defenderRoll.join("+") + "=" + defenderSum);
             if (attackerSum > defenderSum) {
-                if (window.chrome) sounds.win_battle.load();
-                sounds.win_battle.play();
+                playSound(sounds.win_battle);
             } else {
-                if (window.chrome) sounds.lose_battle.load();
-                sounds.lose_battle.play();
+                playSound(sounds.lose_battle);
             }
 
 		});
@@ -209,6 +219,9 @@ function doMove() {
 		setStrengthAtRegion(move.from, 1);
         next();
 	} else if (move.type=="DONE") {
+        if (move.player < previousPlayer) currentTurn++;
+        previousPlayer = move.player;
+
 		var player = game.players[move.player];
 		log(player.name + "'s turn ends.");
 		var total = move.reinforcements.reduce(function(sum, reinforcement) {
@@ -227,8 +240,8 @@ function doMove() {
 		list = list.filter(function(layer) {
 			return layer.length > 0;
 		});
-
 		reinforce(move.player, list, next);
+
 	} else if (move.type=="COMMENT") {
         log(move.comment);
         next();
@@ -270,13 +283,12 @@ function reinforce(player, list, callback) {
 	var placeLayer = function(regionIds) {
 		regionIds.forEach(placeOne);
 		setTimeout(function() {
-            if (window.chrome) sounds.reinforcement.load();
-            sounds.reinforcement.play();
+            playSound(sounds.reinforcement);
 			if (next < list.length) 
 				placeLayer(list[next++]);
 			else
 				callback();
-		}, 500);
+		}, 1*baseDelay);
 	}
 
 	placeLayer(list[next++]);
@@ -291,7 +303,7 @@ function createRegionDiv(region) {
 }
 
 function log(message) {
-	$("#log").html("<p>" + message + "</p>");
+	$("#log").html("<p>Turn #" + currentTurn + ": " + message + "</p>");
 }
 
 function showPlayers(x, el) {

@@ -13,7 +13,7 @@
 * tweak visuals
 * (TD) more maps
 * (JB) ~~many reinforcements: game continues before animations done~~ -DONE
-* changable timings/speed slider
+* (JB) changable timings/speed slider -DONE
 * (JB) ~~pause function~~ -DONE
 * show comments
 * test office network

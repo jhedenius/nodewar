@@ -12,25 +12,39 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public class Game {
+   @JsonIgnore
+   private Random random;
 
+   public GameMap map;
+   public List<PlayerInfo> players;
+   @JsonIgnore
+   public List<PlayerController> controllers;
+   public Map<Integer, Occupant> occupants = new HashMap<Integer, Occupant>();
+   public List<Move> moves = new ArrayList<>();
+   public Integer currentPlayer = 0;
+   public Integer currentTurn = 0;
 
-   public Game() {}
+   public Integer maxTurns = 10;
+
+   public Game() {
+   }
 
    public Game(GameMap map, List<PlayerInfo> players) throws Exception {
 
       List<PlayerController> controllers = new ArrayList<>();
-      for(PlayerInfo player:players){
+      for (PlayerInfo player : players) {
 
-         if(player.getArgument() != null){
+         if (player.getArgument() != null) {
             Constructor constructor = Class.forName(player.getImplementation()).getConstructor(String.class);
             controllers.add((PlayerController) constructor.newInstance(player.getArgument()));
-         } else{
+         } else {
             Constructor constructor = Class.forName(player.getImplementation()).getConstructor();
             controllers.add((PlayerController) constructor.newInstance());
          }
@@ -49,17 +63,6 @@ public class Game {
       }
 
    }
-
-   public GameMap map;
-   public List<PlayerInfo> players;
-   @JsonIgnore
-   public List<PlayerController> controllers;
-   public Map<Integer, Occupant> occupants = new HashMap<Integer, Occupant>();
-   public List<Move> moves = new ArrayList<>();
-   public Integer currentPlayer = 0;
-   public Integer currentTurn = 0;
-
-   public Integer maxTurns = 100;
 
    public Integer getCurrentTurn() {
       return currentTurn;
@@ -114,7 +117,8 @@ public class Game {
             withFieldVisibility(JsonAutoDetect.Visibility.ANY).
             withGetterVisibility(JsonAutoDetect.Visibility.NONE).
             withSetterVisibility(JsonAutoDetect.Visibility.NONE).
-            withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
+            withCreatorVisibility(JsonAutoDetect.Visibility.NONE)
+      );
       objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
       return objectMapper;
    }
@@ -143,22 +147,36 @@ public class Game {
       return players.get(currentPlayer);
    }
 
-   public void distributeInitialRegionOccupants(long randomSeed){
-      Random random = new Random(randomSeed);
+   public void distributeInitialRegionOccupants() {
       List<Region> nonTakenRegions = new ArrayList<>();
 
       nonTakenRegions.addAll(map.regions);
 
-      while(nonTakenRegions.size() > 0){
-         int strength = random.nextInt(6)+1;
-         for(PlayerInfo player:players){
+      while (nonTakenRegions.size() > 0) {
+         int strength = random.nextInt(6) + 1;
+         for (PlayerInfo player : players) {
             Region randomRegion = nonTakenRegions.remove(random.nextInt(nonTakenRegions.size()));
             occupants.get(randomRegion.id).player = player.getId();
             occupants.get(randomRegion.id).strength = strength;
-            if(nonTakenRegions.size() == 0){
+            if (nonTakenRegions.size() == 0) {
                break;
             }
          }
       }
+   }
+
+   public void shufflePlayers() {
+      Collections.shuffle(players, random);
+      for (int i = 0; i < players.size(); i++) {
+         players.get(i).id = i;
+      }
+   }
+
+   public void setRandom(Random random) {
+      this.random = random;
+   }
+
+   public Random getRandom() {
+      return random;
    }
 }

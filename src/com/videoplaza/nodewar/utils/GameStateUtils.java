@@ -25,7 +25,7 @@ public class GameStateUtils {
    public static Set<Node> getPlayerNodes(PlayerInfo player, Game gameState) {
       Set<Node> ownedNodes = new HashSet<>();
       for (Node node : gameState.getNodes()) {
-         if (node.getOccupier() != null && node.getOccupier().equals(player))
+         if (node.getOccupier() != null && node.getOccupier().id == player.id)
             ownedNodes.add(node);
       }
       return ownedNodes;
@@ -53,10 +53,10 @@ public class GameStateUtils {
          reinforcements.put(randomNode, reinforcements.get(randomNode) + 1);
       }
 
-      System.out.println("Reinforcing " + player.getName() + " with " + largestConnectedTerritory);
+      //System.out.println("Reinforcing " + player.getName() + " with " + largestConnectedTerritory);
 
       for (Map.Entry<Node, Integer> entry : reinforcements.entrySet()) {
-         System.out.println("Reinforcing node " + entry.getKey().getName() + " with " + entry.getValue());
+         //System.out.println("Reinforcing node " + entry.getKey().getId() + " with " + entry.getValue());
          entry.getKey().setDiceCount(entry.getKey().getDiceCount() + entry.getValue());
          result.add(new Reinforcement(entry.getKey().getId(), entry.getValue()));
       }
