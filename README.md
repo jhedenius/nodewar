@@ -26,7 +26,7 @@ firsts). You can change replay speed and turn off sounds using the controls belo
 
 ###Don'ts###
 We wrote this game in a few evenings during the last couple of weeks. Cheating or crashing it is not very difficult or impressive. We ask you to:
-* Not modify shared data, like the game map, player names or the list of moves
+* Not modify shared data, like the game map, player names or the list of moves (you may however change the owner and strength of Nodes if you want).
 * Try your best to return valid moves (we check but haven't extensively tested)
 * Not run into infinite loops/infinite recursions, allocate all of the heap, throw RuntimeExceptions etc
 
