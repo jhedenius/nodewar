@@ -16,10 +16,10 @@ Reinforcements are placed randomly on player controlled territories.
 Territories can never have more than 8 dice, any reinforcements which cannot be placed on a territory are lost.
 
 ##How to write your bot##
-* Make a copy of com.videoplaza.nodewar.SimpleBot, implement the only method ```java Move getNextMove(Game game)```.
-* Use ```java game.getNodes()``` to get a list of territories, including their owner, number of dice, neighbours, etc.
-* Some methods of GameStateUtils may be useful.
-* Configure a session in ```game_config.csv```, run com.videoplaza.nodewar.Main
+* Make a copy of com.videoplaza.nodewar.SimpleBot, implement the only method ```Move getNextMove(Game game)```.
+* Use ```game.getNodes()``` to get a list of territories, including their owner, number of dice, neighbours, etc.
+* Some methods of ```GameStateUtils``` may be useful.
+* Configure a session in ```game_config.csv```, run ```com.videoplaza.nodewar.Main```
 * Open ```viewer/index.html``` in a browser (over http, file does not work) to watch the games (if more than one, you can modify the URL to see other than the
 firsts). You can change replay speed and turn off sounds using the controls below the map.
 * The game uses a constant random seed so you can replay the same game and debug your bot. To see different games, change the first line of ```main```.
