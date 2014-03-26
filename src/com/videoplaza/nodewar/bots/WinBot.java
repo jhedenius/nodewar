@@ -103,7 +103,7 @@ public class WinBot implements PlayerController {
                     allAreFriendly = allAreFriendly && adjacentNode.getOccupier().equals(playerInfo);
                 }
 
-                if(allAreFriendly) {
+                if(allAreFriendly && adjacent.getDiceCount() + 2 <= node.getDiceCount()) {
                     Move m = new Move(node, adjacent, "Attack", MoveType.MOVE);
                     moves.add(new CoolMove(-1000 + (node.getDiceCount() - adjacent.getDiceCount()), m));
                 }

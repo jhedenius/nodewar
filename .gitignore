@@ -4,3 +4,4 @@
 build
 nodewar.iml
 node_modules/
+viewer/replay*.json
