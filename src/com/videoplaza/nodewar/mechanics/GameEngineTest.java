@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Random;
 
 public class GameEngineTest {
 

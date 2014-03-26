@@ -41,10 +41,11 @@ exports.process = function(request) {
 
       });
 
-   console.log("Sending ", possibleMove);
-
-   return possibleMove || {
+   possibleMove = possibleMove || {
       "moveType": "DONE",
       "comment": "All in the game yo, all in the game."
    };
+   console.log("Sending ", possibleMove);
+
+   return possibleMove;
 };

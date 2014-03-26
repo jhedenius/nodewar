@@ -54,16 +54,7 @@ public class HttpBot implements PlayerController {
             sb.append(temp);
          }
 
-         Move move = this.reader.readValue(sb.toString(), Move.class);
-
-         if (move.getMoveType() == MoveType.MOVE) {
-            move.setFromNode(new Node(gameState, move.getFrom()));
-            move.setToNode(new Node(gameState, move.getTo()));
-         } else {
-            return move;
-         }
-
-         return move;
+         return this.reader.readValue(sb.toString(), Move.class);
       } catch (Exception e) {
          return done();
       }
