@@ -1,13 +1,6 @@
-map1.json, 1
-map2.json, 1
-map3.json, 1
-map5.json, 1
-map6.json, 1
-uk.json, 1
+map5.json, 100
 Viktor,com.videoplaza.nodewar.bots.SimpleBot
 Jocke, com.videoplaza.nodewar.bots.SimpleBot
 Jakob, com.videoplaza.nodewar.bots.SimpleBot
-Nisse, com.videoplaza.nodewar.bots.SimpleBot
-Toma,  com.videoplaza.nodewar.bots.SimpleBot
-Alex,  com.videoplaza.nodewar.bots.SimpleBot
 Jesper,  com.videoplaza.nodewar.bots.JesperBot
+Win,  com.videoplaza.nodewar.bots.WinBot
