@@ -1,13 +1,21 @@
-map1.json, 1
-map2.json, 1
-map3.json, 1
-map5.json, 1
-map6.json, 1
-uk.json, 1
-Viktor,com.videoplaza.nodewar.bots.SimpleBot
-Jocke, com.videoplaza.nodewar.bots.SimpleBot
+<<<<<<< HEAD
+map1.json, 4
+map2.json, 4
+map3.json, 4
+map5.json, 4
+map6.json, 4
+Studs,com.videoplaza.nodewar.bots.StudsbollBot
+Studs2,com.videoplaza.nodewar.bots.StudsbollBot
+Jakob, com.videoplaza.nodewar.bots.PassiveBot
+P-A, com.videoplaza.nodewar.bots.PaBot
+Toma,  com.videoplaza.nodewar.bots.SimpleBot
+=======
+map1.json, 2
+map2.json, 2
+map3.json, 2
 Jakob, com.videoplaza.nodewar.bots.SimpleBot
 Nisse, com.videoplaza.nodewar.bots.SimpleBot
-Toma,  com.videoplaza.nodewar.bots.SimpleBot
+Toma,  com.videoplaza.nodewar.bots.TomaBot
 Alex,  com.videoplaza.nodewar.bots.SimpleBot
 Jesper,  com.videoplaza.nodewar.bots.JesperBot
+>>>>>>> tomabot
