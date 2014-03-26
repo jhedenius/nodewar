@@ -5,7 +5,8 @@ territory is controlled by a player (a bot) who has 1-8 dice on it. The initial 
 There are two possible actions for a bot to take: attack a neighbour or end its turn. A bot may execute as many attacks as it wants during its turn.
 
 ##Attack##
-Battle is resolved by rolling all the dice on the attacking territory and all the dice on the defending territory: the greatest sum wins (defender wins ties).
+To be able to attack, a territory must have at least 2 dice. Battle is resolved by rolling all the dice on the attacking territory and all the dice on the
+defending territory: the greatest sum wins (defender wins ties).
 If the attacker wins, all but 1 of the dice from the attacking territory move to the captured territory and the defender loses all its dice.
 If the defender wins, the attacker loses all but 1 die which is left on the attacking territory.
 
