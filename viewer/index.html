@@ -281,7 +281,7 @@ function reinforce(player, list, callback) {
 	}
 
 	var placeLayer = function(regionIds) {
-		regionIds.forEach(placeOne);
+        (regionIds || []).forEach(placeOne);
 		setTimeout(function() {
             playSound(sounds.reinforcement);
 			if (next < list.length) 
