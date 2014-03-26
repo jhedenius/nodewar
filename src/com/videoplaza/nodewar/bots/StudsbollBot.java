@@ -19,7 +19,7 @@ import java.util.Set;
 
 public class StudsbollBot implements PlayerController {
 
-   private static final int MAX_DEPTH = 2;
+   private static final int MAX_DEPTH = 3;
    public static final int MIN_ATTACK_OUTPOST = 6;
    private static final double SIZE_MULTIPLIER = 1.5;
    private static final double DICE_MULTIPLIER = 1.2;
@@ -56,13 +56,20 @@ public class StudsbollBot implements PlayerController {
                   return Integer.compare(o1.getDiceCount(), o2.getDiceCount());
                }
             });
-
+            Node bestNode = null;
+            int bestNodeScore = 1000;
             for (Node adjacent : adjacentNodes) {
                if (adjacent.getOccupier() == null || !adjacent.getOccupier().equals(playerInfo)) {
-                  if (adjacent.getDiceCount() < node.getDiceCount() || node.getDiceCount() == 8)
-                     return new Move(node, adjacent, "Attack", MoveType.MOVE);
+                  if (adjacent.getDiceCount() < node.getDiceCount() || node.getDiceCount() == 8) {
+                     int tempScore = node.getDiceCount() - adjacent.getDiceCount();
+                     if (tempScore > 0 && tempScore < bestNodeScore){
+                        bestNode = adjacent;
+                        bestNodeScore = tempScore;
+                     }
+                  }
                }
             }
+            return new Move(node, bestNode, "Attack", MoveType.MOVE);
          }
       }
 
