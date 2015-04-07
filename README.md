@@ -38,3 +38,4 @@ the second will move second to last and so on. Finals are one game each.
 
 ##The game that inspired us##
 http://www.gamedesign.jp/flash/dice/dice.html
+
