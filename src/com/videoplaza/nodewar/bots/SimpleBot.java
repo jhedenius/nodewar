@@ -22,12 +22,7 @@ public class SimpleBot implements PlayerController {
 
       List<Node> ownedNodes = Arrays.asList(GameStateUtils.getPlayerNodes(playerInfo, gameState).toArray(new Node[] { }));
 
-      Collections.sort(ownedNodes, new Comparator<Node>() {
-         @Override
-         public int compare(Node o1, Node o2) {
-            return Integer.compare(o2.getDiceCount(), o1.getDiceCount());
-         }
-      });
+      Collections.sort(ownedNodes, (o1, o2) -> Integer.compare(o2.getDiceCount(), o1.getDiceCount()));
 
       for (Node node : ownedNodes) {
          if (node.getDiceCount() < 2) {
@@ -35,12 +30,7 @@ public class SimpleBot implements PlayerController {
          }
 
          List<Node> adjacentNodes = Arrays.asList(node.getAdjacent().toArray(new Node[] { }));
-         Collections.sort(adjacentNodes, new Comparator<Node>() {
-            @Override
-            public int compare(Node o1, Node o2) {
-               return Integer.compare(o1.getDiceCount(), o2.getDiceCount());
-            }
-         });
+         Collections.sort(adjacentNodes, (o1, o2) -> Integer.compare(o1.getDiceCount(), o2.getDiceCount()));
 
          for (Node adjacent : adjacentNodes) {
             if (adjacent.getOccupier() == null || !adjacent.getOccupier().equals(playerInfo)) {

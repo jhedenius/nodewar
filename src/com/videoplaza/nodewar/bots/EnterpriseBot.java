@@ -52,7 +52,7 @@ public class EnterpriseBot implements PlayerController{
       }
 
       weightedMoves.sort(null);
-§
+
       boolean hasProfitableMove = !weightedMoves.isEmpty() && weightedMoves.get(0).score >= measureScore(gameState);
       if (hasProfitableMove)
          return weightedMoves.get(0).move;
